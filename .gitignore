@@ -7,3 +7,7 @@ dist
 !.env.example
 coverage
 *.tsbuildinfo
+
+# Local source archives
+ProjectAphrodite_Source.zip
+*.zip
