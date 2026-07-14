@@ -75,8 +75,7 @@ export async function POST(request: Request) {
       { status: 404 },
     );
   }
-
-  const memories = await db.memory.findMany({
+const memories = await db.memory.findMany({
   where: {
     userId: session.user.id,
     characterId: conversation.character.id,
@@ -91,6 +90,8 @@ export async function POST(request: Request) {
   ],
   take: 20,
 });
+
+
 
   const chatContext: ChatContext = {
     user: {
