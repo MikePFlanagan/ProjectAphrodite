@@ -115,6 +115,7 @@ export async function POST(request: Request) {
       id: memory.id,
       key: memory.key,
       value: memory.value,
+      category: memory.category as ChatContext['memories'][number]['category'],
       importance: memory.importance,
     })),
   };
@@ -152,6 +153,7 @@ export async function POST(request: Request) {
           characterId: conversation.character.id,
           key: memoryCandidate.key,
           value: memoryCandidate.value,
+          category: memoryCandidate.category,
           importance: memoryCandidate.importance,
         }),
       ),
@@ -264,12 +266,14 @@ async function saveOrUpdateMemory({
   characterId,
   key,
   value,
+  category,
   importance,
 }: {
   userId: string;
   characterId: string;
   key: string;
   value: string;
+  category: string;
   importance: number;
 }) {
   return db.memory.upsert({
@@ -282,6 +286,7 @@ async function saveOrUpdateMemory({
     },
     update: {
       value,
+      category,
       importance,
     },
     create: {
@@ -289,6 +294,7 @@ async function saveOrUpdateMemory({
       characterId,
       key,
       value,
+      category,
       importance,
     },
   });

@@ -1,7 +1,10 @@
+import type { MemoryCategory } from '../memory';
+
 export type ChatMemory = {
   id: string;
   key: string;
   value: string;
+  category: MemoryCategory;
   importance: number;
 };
 
