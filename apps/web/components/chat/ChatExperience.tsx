@@ -25,7 +25,7 @@ type ChatExperienceProps = {
   characterName: string;
   initialMessages: ChatMessage[];
 };
-
+import { MessageContent } from './MessageContent';
 export function ChatExperience({
   conversationId,
   characterName,
@@ -205,11 +205,12 @@ export function ChatExperience({
                     : 'rounded-bl-lg border border-white/[0.09] bg-white/[0.045] text-white/78'
                 }`}
               >
-                {message.content ? (
-                  <p className="whitespace-pre-wrap">
-                    {message.content}
-                  </p>
-                ) : isStreaming ? (
+               {message.content ? (
+  <MessageContent
+    content={message.content}
+    isUser={isUser}
+  />
+) : isStreaming ? (
                   <span className="flex items-center gap-2 text-white/40">
                     <LoaderCircle className="size-4 animate-spin" />
                     {characterName} is thinking…
