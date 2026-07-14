@@ -22,13 +22,23 @@ const memoryPatterns: MemoryPattern[] = [
     importance: 6,
   },
   {
-    pattern: /\bmy (?:dog|pet) is named\s+(.+?)[.!?]*$/i,
-    key: 'pet_name',
+    pattern: /\bmy favorite (?:food|meal) is\s+(.+?)[.!?]*$/i,
+    key: 'favorite_food',
+    importance: 5,
+  },
+  {
+    pattern: /\bmy birthday is\s+(.+?)[.!?]*$/i,
+    key: 'birthday',
+    importance: 9,
+  },
+  {
+    pattern: /\bi work as (?:an? )?(.+?)[.!?]*$/i,
+    key: 'occupation',
     importance: 7,
   },
   {
-    pattern: /\bmy (?:dog|pet)'?s name is\s+(.+?)[.!?]*$/i,
-    key: 'pet_name',
+    pattern: /\bmy job is\s+(.+?)[.!?]*$/i,
+    key: 'occupation',
     importance: 7,
   },
   {
@@ -36,18 +46,71 @@ const memoryPatterns: MemoryPattern[] = [
     key: 'location',
     importance: 6,
   },
+  {
+    pattern: /\bmy goal is to\s+(.+?)[.!?]*$/i,
+    key: 'current_goal',
+    importance: 8,
+  },
+  {
+    pattern: /\bi want to\s+(.+?)[.!?]*$/i,
+    key: 'current_goal',
+    importance: 7,
+  },
+  {
+    pattern: /\bi like\s+(.+?)[.!?]*$/i,
+    key: 'likes',
+    importance: 4,
+  },
+  {
+    pattern: /\bi enjoy\s+(.+?)[.!?]*$/i,
+    key: 'likes',
+    importance: 4,
+  },
+  {
+    pattern: /\bi dislike\s+(.+?)[.!?]*$/i,
+    key: 'dislikes',
+    importance: 4,
+  },
+  {
+    pattern: /\bi hate\s+(.+?)[.!?]*$/i,
+    key: 'dislikes',
+    importance: 5,
+  },
+  {
+    pattern: /\bmy (?:dog|cat|pet) is named\s+(.+?)[.!?]*$/i,
+    key: 'pet_name',
+    importance: 7,
+  },
+  {
+    pattern: /\bmy (?:dog|cat|pet)'?s name is\s+(.+?)[.!?]*$/i,
+    key: 'pet_name',
+    importance: 7,
+  },
 ];
 
-export function extractMockMemory(
+export function extractMockMemories(
   userMessage: string,
-): MemoryCandidate | null {
-  const normalizedMessage = userMessage.trim();
+): MemoryCandidate[] {
+  const statements = userMessage
+    .split(/\r?\n|(?<=[.!?])\s+/)
+    .map((statement) => statement.trim())
+    .filter(Boolean);
 
-  for (const memoryPattern of memoryPatterns) {
-    const match = normalizedMessage.match(
-      memoryPattern.pattern,
+  const candidates = statements
+    .map(extractMemoryFromStatement)
+    .filter(
+      (candidate): candidate is MemoryCandidate =>
+        candidate !== null,
     );
 
+  return deduplicateCandidates(candidates);
+}
+
+function extractMemoryFromStatement(
+  statement: string,
+): MemoryCandidate | null {
+  for (const memoryPattern of memoryPatterns) {
+    const match = statement.match(memoryPattern.pattern);
     const value = match?.[1]?.trim();
 
     if (!value) {
@@ -64,8 +127,24 @@ export function extractMockMemory(
   return null;
 }
 
+function deduplicateCandidates(
+  candidates: MemoryCandidate[],
+): MemoryCandidate[] {
+  const candidatesByKey = new Map<
+    string,
+    MemoryCandidate
+  >();
+
+  for (const candidate of candidates) {
+    candidatesByKey.set(candidate.key, candidate);
+  }
+
+  return [...candidatesByKey.values()];
+}
+
 function cleanMemoryValue(value: string): string {
   return value
+    .replace(/^["']|["']$/g, '')
     .replace(/[.!?]+$/, '')
     .replace(/\s+/g, ' ')
     .trim();

@@ -9,7 +9,7 @@ export {
 } from './providers/mock';
 
 export {
-  extractMockMemory,
+  extractMockMemories,
   type MemoryCandidate,
 } from './memory/extract-mock-memory';
 

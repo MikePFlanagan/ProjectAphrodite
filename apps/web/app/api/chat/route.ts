@@ -4,7 +4,7 @@ import { z } from 'zod';
 import {
   buildCharacterSystemPrompt,
   createMockResponse,
-  extractMockMemory,
+  extractMockMemories,
   getOpenAIModel,
   type ChatContext,
 } from '@aphrodite/ai';
@@ -142,17 +142,23 @@ export async function POST(request: Request) {
     'mock';
 
   if (aiProvider === 'mock') {
-    const memoryCandidate = extractMockMemory(content);
+    const memoryCandidates =
+      extractMockMemories(content);
 
-    const savedMemory = memoryCandidate
-      ? await saveOrUpdateMemory({
+    const savedMemories = await Promise.all(
+      memoryCandidates.map((memoryCandidate) =>
+        saveOrUpdateMemory({
           userId: session.user.id,
           characterId: conversation.character.id,
           key: memoryCandidate.key,
           value: memoryCandidate.value,
           importance: memoryCandidate.importance,
-        })
-      : null;
+        }),
+      ),
+    );
+
+    const savedMemory =
+      savedMemories.at(-1) ?? null;
 
     const mockText = createMockResponse({
       context: chatContext,
