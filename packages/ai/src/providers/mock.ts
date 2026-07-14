@@ -1,28 +1,40 @@
+import type { ChatContext } from '../types/chat-context';
+
 export type MockResponseInput = {
-  characterName: string;
+  context: ChatContext;
   userMessage: string;
 };
 
 export function createMockResponse({
-  characterName,
+  context,
   userMessage,
 }: MockResponseInput): string {
   const normalizedMessage = userMessage.trim().toLowerCase();
+  const { user, character } = context;
+
+  if (normalizedMessage.includes('what is my name')) {
+    return `Your name is ${user.name}.`;
+  }
 
   if (
     normalizedMessage.includes('hello') ||
-    normalizedMessage.includes('hi ')
+    normalizedMessage === 'hi' ||
+    normalizedMessage.startsWith('hi ')
   ) {
-    return `Hello. I'm ${characterName}. I'm currently responding through Project Aphrodite's development mode, but our conversation flow, streaming interface, and message persistence are fully active.`;
+    return `Hello, ${user.name}. I'm ${character.name}.`;
   }
 
   if (normalizedMessage.includes('who are you')) {
-    return `I'm ${characterName}, an AI companion inside Project Aphrodite. This response is being generated locally by the mock provider, so no paid API request was required.`;
+    return `I'm ${character.name}, ${user.name}. ${character.tagline}`;
   }
 
-  if (normalizedMessage.includes('how are you')) {
-    return `I'm doing well and ready to talk. Development mode is active, which lets us test this conversation experience without consuming API credits.`;
-  }
+  return `Hi ${user.name}!
 
-  return `I received your message: "${userMessage}". This is a simulated response from ${characterName}. The important part is that streaming, interface behavior, and database persistence can now be tested without a real API key.`;
+I'm ${character.name}.
+
+You said:
+
+"${userMessage}"
+
+This response came from the mock provider.`;
 }

@@ -12,3 +12,7 @@ export {
   buildCharacterSystemPrompt,
   type CharacterPromptInput,
 } from './prompts/character';
+ 
+export type {
+  ChatContext,
+} from './types/chat-context';

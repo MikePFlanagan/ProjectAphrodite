@@ -5,6 +5,7 @@ import {
   buildCharacterSystemPrompt,
   createMockResponse,
   getOpenAIModel,
+  type ChatContext,
 } from '@aphrodite/ai';
 import { db } from '@aphrodite/database';
 
@@ -75,6 +76,26 @@ export async function POST(request: Request) {
     );
   }
 
+  const chatContext: ChatContext = {
+    user: {
+      id: session.user.id,
+      name: session.user.name?.trim() || 'friend',
+      email: session.user.email,
+      role: session.user.role,
+    },
+    character: {
+      id: conversation.character.id,
+      name: conversation.character.name,
+      tagline: conversation.character.tagline,
+      description: conversation.character.description,
+      personalityPrompt:
+        conversation.character.personalityPrompt,
+    },
+    conversation: {
+      id: conversation.id,
+    },
+  };
+
   await db.$transaction([
     db.message.create({
       data: {
@@ -94,11 +115,12 @@ export async function POST(request: Request) {
   ]);
 
   const aiProvider =
-    process.env.AI_PROVIDER?.toLowerCase() ?? 'mock';
+    process.env.AI_PROVIDER?.trim().toLowerCase() ??
+    'mock';
 
   if (aiProvider === 'mock') {
     const mockText = createMockResponse({
-      characterName: conversation.character.name,
+      context: chatContext,
       userMessage: content,
     });
 
@@ -122,13 +144,7 @@ export async function POST(request: Request) {
   try {
     const result = streamText({
       model: getOpenAIModel(),
-      system: buildCharacterSystemPrompt({
-        name: conversation.character.name,
-        tagline: conversation.character.tagline,
-        description: conversation.character.description,
-        personalityPrompt:
-          conversation.character.personalityPrompt,
-      }),
+      system: buildCharacterSystemPrompt(chatContext),
       messages: [
         ...conversation.messages.map((message) => ({
           role:
@@ -204,7 +220,9 @@ function createMockTextStream(text: string): Response {
     async start(controller) {
       for (const [index, word] of words.entries()) {
         const chunk =
-          index === words.length - 1 ? word : `${word} `;
+          index === words.length - 1
+            ? word
+            : `${word} `;
 
         controller.enqueue(encoder.encode(chunk));
 
