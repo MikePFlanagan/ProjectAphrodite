@@ -77,6 +77,20 @@ export async function POST(request: Request) {
     );
   }
 
+  await db.relationship.upsert({
+    where: {
+      userId_characterId: {
+        userId: session.user.id,
+        characterId: conversation.character.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: session.user.id,
+      characterId: conversation.character.id,
+    },
+  });
+
   const memories = await db.memory.findMany({
     where: {
       userId: session.user.id,
