@@ -9,6 +9,11 @@ export {
 } from './providers/mock';
 
 export {
+  extractMockMemory,
+  type MemoryCandidate,
+} from './memory/extract-mock-memory';
+
+export {
   buildCharacterSystemPrompt,
   type CharacterPromptInput,
 } from './prompts/character';

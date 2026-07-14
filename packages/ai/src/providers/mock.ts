@@ -3,16 +3,27 @@ import type { ChatContext } from '../types/chat-context';
 export type MockResponseInput = {
   context: ChatContext;
   userMessage: string;
+  memorySaved?: {
+    key: string;
+    value: string;
+  } | null;
 };
 
 export function createMockResponse({
   context,
   userMessage,
+  memorySaved,
 }: MockResponseInput): string {
   const normalizedMessage =
     userMessage.trim().toLowerCase();
 
   const { user, character, memories } = context;
+
+  if (memorySaved) {
+    return `I'll remember that, ${user.name}: **${formatMemoryKey(
+      memorySaved.key,
+    )}** is **${memorySaved.value}**.`;
+  }
 
   if (normalizedMessage.includes('what is my name')) {
     return `Your name is ${user.name}.`;

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import {
   buildCharacterSystemPrompt,
   createMockResponse,
+  extractMockMemory,
   getOpenAIModel,
   type ChatContext,
 } from '@aphrodite/ai';
@@ -75,23 +76,22 @@ export async function POST(request: Request) {
       { status: 404 },
     );
   }
-const memories = await db.memory.findMany({
-  where: {
-    userId: session.user.id,
-    characterId: conversation.character.id,
-  },
-  orderBy: [
-    {
-      importance: 'desc',
-    },
-    {
-      updatedAt: 'desc',
-    },
-  ],
-  take: 20,
-});
 
-
+  const memories = await db.memory.findMany({
+    where: {
+      userId: session.user.id,
+      characterId: conversation.character.id,
+    },
+    orderBy: [
+      {
+        importance: 'desc',
+      },
+      {
+        updatedAt: 'desc',
+      },
+    ],
+    take: 20,
+  });
 
   const chatContext: ChatContext = {
     user: {
@@ -112,14 +112,12 @@ const memories = await db.memory.findMany({
       id: conversation.id,
     },
     memories: memories.map((memory) => ({
-  id: memory.id,
-  key: memory.key,
-  value: memory.value,
-  importance: memory.importance,
-  })),
+      id: memory.id,
+      key: memory.key,
+      value: memory.value,
+      importance: memory.importance,
+    })),
   };
-
-  
 
   await db.$transaction([
     db.message.create({
@@ -144,9 +142,27 @@ const memories = await db.memory.findMany({
     'mock';
 
   if (aiProvider === 'mock') {
+    const memoryCandidate = extractMockMemory(content);
+
+    const savedMemory = memoryCandidate
+      ? await saveOrUpdateMemory({
+          userId: session.user.id,
+          characterId: conversation.character.id,
+          key: memoryCandidate.key,
+          value: memoryCandidate.value,
+          importance: memoryCandidate.importance,
+        })
+      : null;
+
     const mockText = createMockResponse({
       context: chatContext,
       userMessage: content,
+      memorySaved: savedMemory
+        ? {
+            key: savedMemory.key,
+            value: savedMemory.value,
+          }
+        : null,
     });
 
     await saveAssistantMessage({
@@ -235,6 +251,50 @@ async function saveAssistantMessage({
       },
     }),
   ]);
+}
+
+async function saveOrUpdateMemory({
+  userId,
+  characterId,
+  key,
+  value,
+  importance,
+}: {
+  userId: string;
+  characterId: string;
+  key: string;
+  value: string;
+  importance: number;
+}) {
+  const existingMemory = await db.memory.findFirst({
+    where: {
+      userId,
+      characterId,
+      key,
+    },
+  });
+
+  if (existingMemory) {
+    return db.memory.update({
+      where: {
+        id: existingMemory.id,
+      },
+      data: {
+        value,
+        importance,
+      },
+    });
+  }
+
+  return db.memory.create({
+    data: {
+      userId,
+      characterId,
+      key,
+      value,
+      importance,
+    },
+  });
 }
 
 function createMockTextStream(text: string): Response {
