@@ -4,8 +4,10 @@ import { z } from 'zod';
 import {
   buildCharacterSystemPrompt,
   createMockResponse,
+  evaluateRelationship,
   extractMockMemories,
   getOpenAIModel,
+  updateRelationship,
   type ChatContext,
 } from '@aphrodite/ai';
 import { db } from '@aphrodite/database';
@@ -91,6 +93,29 @@ export async function POST(request: Request) {
     },
   });
 
+  const relationshipDelta =
+    evaluateRelationship(content);
+
+  const updatedRelationship =
+    updateRelationship(
+      {
+        trust: relationship.trust,
+        comfort: relationship.comfort,
+        curiosity: relationship.curiosity,
+        playfulness: relationship.playfulness,
+        affection: relationship.affection,
+        respect: relationship.respect,
+      },
+      relationshipDelta,
+    );
+
+  await db.relationship.update({
+    where: {
+      id: relationship.id,
+    },
+    data: updatedRelationship,
+  });
+
   const memories = await db.memory.findMany({
     where: {
       userId: session.user.id,
@@ -133,12 +158,13 @@ export async function POST(request: Request) {
       importance: memory.importance,
     })),
     relationship: {
-      trust: relationship.trust,
-      comfort: relationship.comfort,
-      curiosity: relationship.curiosity,
-      playfulness: relationship.playfulness,
-      affection: relationship.affection,
-      respect: relationship.respect,
+      trust: updatedRelationship.trust,
+      comfort: updatedRelationship.comfort,
+      curiosity: updatedRelationship.curiosity,
+      playfulness:
+        updatedRelationship.playfulness,
+      affection: updatedRelationship.affection,
+      respect: updatedRelationship.respect,
     },
   };
 
