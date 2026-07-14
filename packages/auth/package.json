@@ -1,0 +1,7 @@
+{
+  "name": "@aphrodite/auth", "private": true, "version": "0.0.0", "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "lint": "eslint .", "typecheck": "tsc --noEmit", "build": "tsc --noEmit" },
+  "dependencies": { "@auth/prisma-adapter": "^2.7.0", "@aphrodite/database": "workspace:*", "next-auth": "^5.0.0-beta.29" },
+  "devDependencies": { "@aphrodite/config": "workspace:*", "typescript": "^5.8.0" }
+}

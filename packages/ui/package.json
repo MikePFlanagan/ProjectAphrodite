@@ -1,0 +1,7 @@
+{
+  "name": "@aphrodite/ui", "private": true, "version": "0.0.0", "type": "module",
+  "exports": { ".": "./src/index.ts", "./button": "./src/button.tsx" },
+  "scripts": { "lint": "eslint .", "typecheck": "tsc --noEmit", "build": "tsc --noEmit" },
+  "peerDependencies": { "react": "^19.0.0", "react-dom": "^19.0.0" },
+  "devDependencies": { "@aphrodite/config": "workspace:*", "@types/react": "^19.0.0", "typescript": "^5.8.0" }
+}

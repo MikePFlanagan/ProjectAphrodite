@@ -1,0 +1,2 @@
+import { Sparkles } from 'lucide-react';
+export function EmptyState({ title, copy }: { title: string; copy: string }) { return <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.025] px-6 py-12 text-center"><Sparkles className="mx-auto size-5 text-fuchsia-200/70" /><h3 className="mt-4 font-medium text-white">{title}</h3><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-white/45">{copy}</p></div>; }

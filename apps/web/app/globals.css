@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+}
+
+:root { --background: #0c0910; --foreground: #f8f4fb; --font-sans: Arial, Helvetica, sans-serif; }
+* { border-color: color-mix(in srgb, currentColor 16%, transparent); }
+body { min-height: 100vh; background: var(--background); color: var(--foreground); font-family: var(--font-sans); }

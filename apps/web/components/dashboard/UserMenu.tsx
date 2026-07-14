@@ -1,0 +1,3 @@
+import { LogOut } from 'lucide-react';
+import { signOutAction } from '@/app/(auth)/actions';
+export function UserMenu({ name, email }: { name: string; email?: string | null }) { return <div className="flex items-center gap-3"><div className="hidden text-right sm:block"><p className="text-sm text-white">{name}</p><p className="text-xs text-white/40">{email}</p></div><form action={signOutAction}><button title="Sign out" className="grid size-9 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-white/65 hover:text-white"><LogOut className="size-4" /></button></form></div>; }

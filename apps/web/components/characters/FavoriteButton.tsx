@@ -1,0 +1,4 @@
+'use client';
+import { Heart } from 'lucide-react';
+import { useState } from 'react';
+export function FavoriteButton({ characterId, initialFavorite }: { characterId: string; initialFavorite: boolean }) { const [favorite, setFavorite] = useState(initialFavorite); async function toggle() { const response = await fetch('/api/favorites', { method: favorite ? 'DELETE' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ characterId }) }); if (response.ok) setFavorite(!favorite); } return <button onClick={toggle} aria-label={favorite ? 'Remove favorite' : 'Add favorite'} className={`grid size-10 place-items-center rounded-xl border transition ${favorite ? 'border-rose-300/40 bg-rose-300/15 text-rose-200' : 'border-white/12 bg-white/[0.04] text-white/60 hover:text-white'}`}><Heart className={`size-4 ${favorite ? 'fill-current' : ''}`} /></button>; }

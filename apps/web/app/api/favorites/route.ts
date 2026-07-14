@@ -1,0 +1,7 @@
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { db } from '@aphrodite/database';
+import { auth } from '@/auth';
+const bodySchema = z.object({ characterId: z.string().cuid() });
+export async function POST(request: Request) { const session = await auth(); if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); const parsed = bodySchema.safeParse(await request.json()); if (!parsed.success) return NextResponse.json({ error: 'Invalid character.' }, { status: 400 }); const character = await db.character.findFirst({ where: { id: parsed.data.characterId, isPublished: true } }); if (!character) return NextResponse.json({ error: 'Not found' }, { status: 404 }); await db.favorite.upsert({ where: { userId_characterId: { userId: session.user.id, characterId: character.id } }, update: {}, create: { userId: session.user.id, characterId: character.id } }); return NextResponse.json({ ok: true }); }
+export async function DELETE(request: Request) { const session = await auth(); if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); const parsed = bodySchema.safeParse(await request.json()); if (!parsed.success) return NextResponse.json({ error: 'Invalid character.' }, { status: 400 }); await db.favorite.deleteMany({ where: { userId: session.user.id, characterId: parsed.data.characterId } }); return NextResponse.json({ ok: true }); }

@@ -1,0 +1,2 @@
+import { EmptyState } from '@/components/characters/EmptyState';
+export default function CreatorPage() { return <div><p className="text-xs font-semibold tracking-[0.18em] text-fuchsia-200/70">CREATOR STUDIO</p><h1 className="mt-3 text-3xl font-semibold tracking-[-0.05em]">Build worlds, later.</h1><div className="mt-10"><EmptyState title="Creator tools are being prepared" copy="Character publishing and creator management will arrive after the companion conversation experience." /></div></div>; }

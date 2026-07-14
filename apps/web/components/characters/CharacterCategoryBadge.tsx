@@ -1,0 +1,1 @@
+export function CharacterCategoryBadge({ category }: { category: string }) { return <span className="rounded-full border border-fuchsia-200/15 bg-fuchsia-200/10 px-2.5 py-1 text-[10px] font-semibold tracking-wider text-fuchsia-100">{category.replace('_', ' ')}</span>; }

@@ -1,0 +1,7 @@
+{
+  "name": "@aphrodite/database", "private": true, "version": "0.0.0", "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "generate": "prisma generate --schema ../../prisma/schema.prisma", "migrate": "prisma migrate dev --schema ../../prisma/schema.prisma", "seed": "tsx ../../prisma/seed.ts", "studio": "prisma studio --schema ../../prisma/schema.prisma", "validate": "prisma validate --schema ../../prisma/schema.prisma", "lint": "eslint .", "typecheck": "tsc --noEmit", "build": "tsc --noEmit" },
+  "dependencies": { "@prisma/client": "^6.0.0" },
+  "devDependencies": { "@aphrodite/config": "workspace:*", "prisma": "^6.0.0", "tsx": "^4.0.0", "typescript": "^5.8.0" }
+}

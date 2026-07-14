@@ -1,0 +1,3 @@
+import { CharacterGrid } from '@/components/characters/CharacterGrid';
+import { publishedCharacters } from '@/lib/data';
+export default async function ExplorePage() { const characters = await publishedCharacters(); return <div><p className="text-xs font-semibold tracking-[0.18em] text-fuchsia-200/70">EXPLORE</p><h1 className="mt-3 text-3xl font-semibold tracking-[-0.05em]">Find a conversation worth returning to.</h1><p className="mt-2 max-w-xl text-sm leading-6 text-white/45">Each original character has a distinct point of view, tone, and invitation to begin.</p><div className="mt-10"><CharacterGrid characters={characters} /></div></div>; }
