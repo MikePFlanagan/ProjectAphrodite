@@ -10,6 +10,7 @@ import {
 
 import { db } from '@aphrodite/database';
 
+import { DeleteMemoryButton } from '@/components/memory/DeleteMemoryButton';
 import { requireUser } from '@/lib/require-auth';
 
 function formatMemoryKey(key: string) {
@@ -126,14 +127,21 @@ export default async function MemoryPage() {
                     {memory.value}
                   </p>
 
-                  <div className="mt-5 border-t border-white/[0.08] pt-4">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-white/25">
-                      Remembered by
-                    </p>
+                  <div className="mt-5 flex items-end justify-between gap-4 border-t border-white/[0.08] pt-4">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.14em] text-white/25">
+                        Remembered by
+                      </p>
 
-                    <p className="mt-1 text-sm text-white/45">
-                      {memory.character.name}
-                    </p>
+                      <p className="mt-1 text-sm text-white/45">
+                        {memory.character.name}
+                      </p>
+                    </div>
+
+                    <DeleteMemoryButton
+                      memoryId={memory.id}
+                      memoryLabel={formatMemoryKey(memory.key)}
+                    />
                   </div>
                 </article>
               );
