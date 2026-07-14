@@ -24,3 +24,5 @@ export type {
   ChatContext,
   ChatMemory,
 } from './types/chat-context';
+
+export * from './relationship';
