@@ -11,7 +11,7 @@ export {
 export {
   extractMockMemories,
   type MemoryCandidate,
-} from './memory/extract-mock-memory';
+} from './memory';
 
 export {
   buildCharacterSystemPrompt,
