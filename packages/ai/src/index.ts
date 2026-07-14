@@ -9,8 +9,10 @@ export {
 } from './providers/mock';
 
 export {
+  categorizeMemoryKey,
   extractMockMemories,
   type MemoryCandidate,
+  type MemoryCategory,
 } from './memory';
 
 export {

@@ -1,6 +1,9 @@
 export {
+  categorizeMemoryKey,
+} from './categorize';
+
+export {
   extractMockMemories,
-  type MemoryCandidate,
 } from './extract-mock-memory';
 
 export {
@@ -11,3 +14,8 @@ export {
   memoryPatterns,
   type MemoryPattern,
 } from './patterns';
+
+export type {
+  MemoryCandidate,
+  MemoryCategory,
+} from './types';

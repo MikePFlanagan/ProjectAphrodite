@@ -1,11 +1,11 @@
+import { categorizeMemoryKey } from './categorize';
 import { deduplicateMemoryCandidates } from './merge';
 import { memoryPatterns } from './patterns';
+import type { MemoryCandidate } from './types';
 
-export type MemoryCandidate = {
-  key: string;
-  value: string;
-  importance: number;
-};
+export type {
+  MemoryCandidate,
+} from './types';
 
 export function extractMockMemories(
   userMessage: string,
@@ -35,7 +35,10 @@ function extractMemoryFromStatement(
   statement: string,
 ): MemoryCandidate | null {
   for (const memoryPattern of memoryPatterns) {
-    const match = statement.match(memoryPattern.pattern);
+    const match = statement.match(
+      memoryPattern.pattern,
+    );
+
     const value = match?.[1]?.trim();
 
     if (!value) {
@@ -46,6 +49,9 @@ function extractMemoryFromStatement(
       key: memoryPattern.key,
       value: cleanMemoryValue(value),
       importance: memoryPattern.importance,
+      category: categorizeMemoryKey(
+        memoryPattern.key,
+      ),
     };
   }
 

@@ -1,4 +1,4 @@
-import type { MemoryCandidate } from './extract-mock-memory';
+import type { MemoryCandidate } from './types';
 
 export function deduplicateMemoryCandidates(
   candidates: MemoryCandidate[],
