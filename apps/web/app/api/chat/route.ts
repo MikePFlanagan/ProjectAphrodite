@@ -266,28 +266,19 @@ async function saveOrUpdateMemory({
   value: string;
   importance: number;
 }) {
-  const existingMemory = await db.memory.findFirst({
+  return db.memory.upsert({
     where: {
-      userId,
-      characterId,
-      key,
+      userId_characterId_key: {
+        userId,
+        characterId,
+        key,
+      },
     },
-  });
-
-  if (existingMemory) {
-    return db.memory.update({
-      where: {
-        id: existingMemory.id,
-      },
-      data: {
-        value,
-        importance,
-      },
-    });
-  }
-
-  return db.memory.create({
-    data: {
+    update: {
+      value,
+      importance,
+    },
+    create: {
       userId,
       characterId,
       key,
