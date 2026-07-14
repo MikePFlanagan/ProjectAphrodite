@@ -11,6 +11,7 @@ import {
 import { db } from '@aphrodite/database';
 
 import { DeleteMemoryButton } from '@/components/memory/DeleteMemoryButton';
+import { EditMemoryButton } from '@/components/memory/EditMemoryButton';
 import { requireUser } from '@/lib/require-auth';
 
 function formatMemoryKey(key: string) {
@@ -82,8 +83,9 @@ export default async function MemoryPage() {
           </h1>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/45">
-            These saved facts help companions personalize future conversations.
-            Memories are stored separately for each companion.
+            Review, correct, or remove facts that companions use to personalize
+            future conversations. Memories are stored separately for each
+            companion.
           </p>
         </div>
 
@@ -103,11 +105,12 @@ export default async function MemoryPage() {
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {memories.map((memory) => {
               const Icon = getMemoryIcon(memory.key);
+              const memoryLabel = formatMemoryKey(memory.key);
 
               return (
                 <article
                   key={memory.id}
-                  className="rounded-[24px] border border-white/[0.09] bg-white/[0.035] p-5 transition hover:border-fuchsia-200/20 hover:bg-white/[0.05]"
+                  className="flex min-h-[300px] flex-col rounded-[24px] border border-white/[0.09] bg-white/[0.035] p-5 transition hover:border-fuchsia-200/20 hover:bg-white/[0.05]"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="grid size-10 place-items-center rounded-2xl bg-fuchsia-300/[0.09] text-fuchsia-100 ring-1 ring-fuchsia-200/10">
@@ -119,29 +122,39 @@ export default async function MemoryPage() {
                     </span>
                   </div>
 
-                  <h2 className="mt-5 text-sm font-semibold text-white">
-                    {formatMemoryKey(memory.key)}
-                  </h2>
+                  <div className="flex-1">
+                    <h2 className="mt-5 text-sm font-semibold text-white">
+                      {memoryLabel}
+                    </h2>
 
-                  <p className="mt-2 break-words text-base leading-7 text-white/75">
-                    {memory.value}
-                  </p>
+                    <p className="mt-2 break-words text-base leading-7 text-white/75">
+                      {memory.value}
+                    </p>
 
-                  <div className="mt-5 flex items-end justify-between gap-4 border-t border-white/[0.08] pt-4">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.14em] text-white/25">
-                        Remembered by
-                      </p>
-
-                      <p className="mt-1 text-sm text-white/45">
-                        {memory.character.name}
-                      </p>
-                    </div>
-
-                    <DeleteMemoryButton
+                    <EditMemoryButton
                       memoryId={memory.id}
-                      memoryLabel={formatMemoryKey(memory.key)}
+                      initialValue={memory.value}
+                      initialImportance={memory.importance}
                     />
+                  </div>
+
+                  <div className="mt-5 border-t border-white/[0.08] pt-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="text-[11px] uppercase tracking-[0.14em] text-white/25">
+                          Remembered by
+                        </p>
+
+                        <p className="mt-1 truncate text-sm text-white/45">
+                          {memory.character.name}
+                        </p>
+                      </div>
+
+                      <DeleteMemoryButton
+                        memoryId={memory.id}
+                        memoryLabel={memoryLabel}
+                      />
+                    </div>
                   </div>
                 </article>
               );

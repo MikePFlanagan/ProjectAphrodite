@@ -68,12 +68,12 @@ export function DeleteMemoryButton({
   }
 
   return (
-    <div>
+    <div className="shrink-0">
       <button
         type="button"
         onClick={handleDelete}
         disabled={isDeleting}
-        className="inline-flex items-center gap-2 rounded-xl border border-rose-300/15 bg-rose-300/[0.06] px-3 py-2 text-xs font-semibold text-rose-100/70 transition hover:border-rose-300/25 hover:bg-rose-300/[0.1] hover:text-rose-100 disabled:cursor-not-allowed disabled:opacity-45"
+        className="inline-flex h-9 items-center gap-2 rounded-xl border border-rose-300/15 bg-rose-300/[0.05] px-3 text-xs font-semibold text-rose-100/70 transition hover:border-rose-300/25 hover:bg-rose-300/[0.1] hover:text-rose-100 disabled:cursor-not-allowed disabled:opacity-45"
       >
         {isDeleting ? (
           <LoaderCircle className="size-3.5 animate-spin" />
@@ -85,7 +85,7 @@ export function DeleteMemoryButton({
       </button>
 
       {error ? (
-        <p className="mt-2 text-xs text-rose-200">
+        <p className="mt-2 max-w-40 text-right text-xs text-rose-200">
           {error}
         </p>
       ) : null}
