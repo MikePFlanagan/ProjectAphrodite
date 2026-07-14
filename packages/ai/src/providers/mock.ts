@@ -17,12 +17,32 @@ export function createMockResponse({
   const normalizedMessage =
     userMessage.trim().toLowerCase();
 
-  const { user, character, memories } = context;
+  const {
+    user,
+    character,
+    memories,
+    relationship,
+  } = context;
 
   if (memorySaved) {
     return `I'll remember that, ${user.name}: **${formatMemoryKey(
       memorySaved.key,
     )}** is **${memorySaved.value}**.`;
+  }
+
+  if (
+    normalizedMessage.includes('relationship score') ||
+    normalizedMessage.includes('relationship scores') ||
+    normalizedMessage.includes('how is our relationship')
+  ) {
+    return `Here is our current relationship state, ${user.name}:
+
+- **Trust:** ${relationship.trust}
+- **Comfort:** ${relationship.comfort}
+- **Curiosity:** ${relationship.curiosity}
+- **Playfulness:** ${relationship.playfulness}
+- **Affection:** ${relationship.affection}
+- **Respect:** ${relationship.respect}`;
   }
 
   if (normalizedMessage.includes('what is my name')) {

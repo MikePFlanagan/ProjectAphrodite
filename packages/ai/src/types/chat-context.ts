@@ -1,4 +1,5 @@
 import type { MemoryCategory } from '../memory';
+import type { Relationship } from '../relationship';
 
 export type ChatMemory = {
   id: string;
@@ -29,4 +30,6 @@ export type ChatContext = {
   };
 
   memories: ChatMemory[];
+
+  relationship: Relationship;
 };

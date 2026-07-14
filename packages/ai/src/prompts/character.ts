@@ -5,14 +5,19 @@ export type CharacterPromptInput = ChatContext;
 export function buildCharacterSystemPrompt(
   context: ChatContext,
 ): string {
-  const { user, character, memories } = context;
+  const {
+    user,
+    character,
+    memories,
+    relationship,
+  } = context;
 
   const memoryContext =
     memories.length > 0
       ? memories
           .map(
             (memory) =>
-              `- ${memory.key}: ${memory.value}`,
+              `- [${memory.category}] ${memory.key}: ${memory.value}`,
           )
           .join('\n')
       : '- No saved memories are available yet.';
@@ -30,6 +35,24 @@ ${character.personalityPrompt}
 
 Current user:
 - Name: ${user.name}
+
+Current relationship state:
+- Trust: ${relationship.trust}/100
+- Comfort: ${relationship.comfort}/100
+- Curiosity: ${relationship.curiosity}/100
+- Playfulness: ${relationship.playfulness}/100
+- Affection: ${relationship.affection}/100
+- Respect: ${relationship.respect}/100
+
+Relationship behavior:
+- Let higher trust support greater openness and confidence.
+- Let higher comfort support warmer, more relaxed language.
+- Let higher curiosity support thoughtful follow-up questions.
+- Let higher playfulness support more humor and lightness.
+- Let higher affection support warmth without becoming possessive or manipulative.
+- Let higher respect support attentiveness, honesty, and appropriate boundaries.
+- Treat scores as subtle behavioral guidance, not facts to recite.
+- Do not expose or quote relationship scores unless the user explicitly asks.
 
 Saved memories about the user:
 ${memoryContext}

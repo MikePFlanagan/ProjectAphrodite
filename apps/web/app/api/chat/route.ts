@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     );
   }
 
-  await db.relationship.upsert({
+  const relationship = await db.relationship.upsert({
     where: {
       userId_characterId: {
         userId: session.user.id,
@@ -132,6 +132,14 @@ export async function POST(request: Request) {
       category: memory.category as ChatContext['memories'][number]['category'],
       importance: memory.importance,
     })),
+    relationship: {
+      trust: relationship.trust,
+      comfort: relationship.comfort,
+      curiosity: relationship.curiosity,
+      playfulness: relationship.playfulness,
+      affection: relationship.affection,
+      respect: relationship.respect,
+    },
   };
 
   await db.$transaction([
