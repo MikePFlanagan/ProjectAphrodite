@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import {
   buildCharacterSystemPrompt,
+  createMockResponse,
   getOpenAIModel,
 } from '@aphrodite/ai';
 import { db } from '@aphrodite/database';
@@ -92,6 +93,32 @@ export async function POST(request: Request) {
     }),
   ]);
 
+  const aiProvider =
+    process.env.AI_PROVIDER?.toLowerCase() ?? 'mock';
+
+  if (aiProvider === 'mock') {
+    const mockText = createMockResponse({
+      characterName: conversation.character.name,
+      userMessage: content,
+    });
+
+    await saveAssistantMessage({
+      conversationId,
+      content: mockText,
+    });
+
+    return createMockTextStream(mockText);
+  }
+
+  if (aiProvider !== 'openai') {
+    return Response.json(
+      {
+        error: `Unsupported AI provider: ${aiProvider}`,
+      },
+      { status: 500 },
+    );
+  }
+
   try {
     const result = streamText({
       model: getOpenAIModel(),
@@ -125,23 +152,10 @@ export async function POST(request: Request) {
           return;
         }
 
-        await db.$transaction([
-          db.message.create({
-            data: {
-              conversationId,
-              role: 'ASSISTANT',
-              content: assistantText,
-            },
-          }),
-          db.conversation.update({
-            where: {
-              id: conversationId,
-            },
-            data: {
-              lastMessageAt: new Date(),
-            },
-          }),
-        ]);
+        await saveAssistantMessage({
+          conversationId,
+          content: assistantText,
+        });
       },
     });
 
@@ -154,4 +168,59 @@ export async function POST(request: Request) {
       { status: 502 },
     );
   }
+}
+
+async function saveAssistantMessage({
+  conversationId,
+  content,
+}: {
+  conversationId: string;
+  content: string;
+}) {
+  await db.$transaction([
+    db.message.create({
+      data: {
+        conversationId,
+        role: 'ASSISTANT',
+        content,
+      },
+    }),
+    db.conversation.update({
+      where: {
+        id: conversationId,
+      },
+      data: {
+        lastMessageAt: new Date(),
+      },
+    }),
+  ]);
+}
+
+function createMockTextStream(text: string): Response {
+  const encoder = new TextEncoder();
+  const words = text.split(' ');
+
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      for (const [index, word] of words.entries()) {
+        const chunk =
+          index === words.length - 1 ? word : `${word} `;
+
+        controller.enqueue(encoder.encode(chunk));
+
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 35);
+        });
+      }
+
+      controller.close();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-cache',
+    },
+  });
 }
