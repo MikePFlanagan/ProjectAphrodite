@@ -5,7 +5,7 @@ services:
       POSTGRES_DB: aphrodite
       POSTGRES_USER: aphrodite
       POSTGRES_PASSWORD: aphrodite
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
     volumes: ["postgres_data:/var/lib/postgresql/data"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aphrodite -d aphrodite"]

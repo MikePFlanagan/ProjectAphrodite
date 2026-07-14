@@ -15,8 +15,8 @@ export function Hero() {
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.14 }} className="mt-7 max-w-xl text-base leading-7 text-white/60 sm:text-lg">Build meaningful conversations with personalized AI characters.</motion.p>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.22 }} className="mt-9 flex flex-wrap gap-3">
-          <a id="create" href="#pricing" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#170d20] transition hover:bg-fuchsia-100">Start creating <ArrowRight className="size-4" /></a>
-          <a href="#characters" className="rounded-xl border border-white/15 bg-white/[0.045] px-5 py-3 text-sm font-semibold text-white/80 backdrop-blur transition hover:bg-white/10 hover:text-white">Explore characters</a>
+          <a href="/signup" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#170d20] transition hover:bg-fuchsia-100">Start creating <ArrowRight className="size-4" /></a>
+          <a href="/explore" className="rounded-xl border border-white/15 bg-white/[0.045] px-5 py-3 text-sm font-semibold text-white/80 backdrop-blur transition hover:bg-white/10 hover:text-white">Explore characters</a>
         </motion.div>
       </div>
     </section>
