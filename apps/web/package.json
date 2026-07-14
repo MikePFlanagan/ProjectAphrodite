@@ -16,6 +16,7 @@
     "@aphrodite/database": "workspace:*",
     "@aphrodite/ui": "workspace:*",
     "@auth/prisma-adapter": "^2.7.0",
+    "ai": "^5.0.212",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^12.0.0",
     "lucide-react": "^0.468.0",
@@ -28,8 +29,8 @@
   "devDependencies": {
     "@aphrodite/config": "workspace:*",
     "@tailwindcss/postcss": "^4.0.0",
-    "@types/react": "^19.0.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.0.0",

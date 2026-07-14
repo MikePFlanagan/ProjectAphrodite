@@ -1,6 +1,102 @@
-import { notFound } from 'next/navigation';
 import { Bot, Send } from 'lucide-react';
+import { notFound } from 'next/navigation';
+
 import { db } from '@aphrodite/database';
+
 import { CharacterAvatar } from '@/components/characters/CharacterAvatar';
 import { requireUser } from '@/lib/require-auth';
-export default async function ChatPage({ params }: { params: Promise<{ conversationId: string }> }) { const user = await requireUser(); const conversation = await db.conversation.findFirst({ where: { id: (await params).conversationId, userId: user.id }, include: { character: true, messages: { orderBy: { createdAt: 'asc' } } } }); if (!conversation) notFound(); return <div className="mx-auto flex max-w-3xl flex-col"><header className="flex items-center gap-3 border-b border-white/10 pb-5"><CharacterAvatar name={conversation.character.name} gradient={conversation.character.avatarUrl} size="sm" /><div><h1 className="font-medium">{conversation.character.name}</h1><p className="text-sm text-white/45">Conversation preview</p></div></header><div className="min-h-[48vh] space-y-4 py-7">{conversation.messages.map((message) => <div key={message.id} className={`flex gap-3 ${message.role === 'USER' ? 'justify-end' : ''}`}>{message.role !== 'USER' && <Bot className="mt-1 size-4 shrink-0 text-fuchsia-200" />}<p className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === 'USER' ? 'bg-white text-[#170d20]' : 'bg-white/[0.07] text-white/75'}`}>{message.content}</p></div>)}</div><div className="rounded-2xl border border-fuchsia-200/15 bg-fuchsia-200/[0.05] px-4 py-3 text-xs text-fuchsia-100/70">Live AI replies arrive in the next phase. This conversation is saved and ready for that connection.</div><form className="mt-4 flex gap-2"><input disabled placeholder="Live messaging is coming next…" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm text-white/50" /><button disabled className="grid size-11 place-items-center rounded-xl bg-white/15 text-white/45"><Send className="size-4" /></button></form></div>; }
+
+export default async function ChatPage({
+  params,
+}: {
+  params: Promise<{ conversationId: string }>;
+}) {
+  const user = await requireUser();
+  const { conversationId } = await params;
+
+  const conversation = await db.conversation.findFirst({
+    where: {
+      id: conversationId,
+      userId: user.id,
+    },
+    include: {
+      character: true,
+      messages: {
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+    },
+  });
+
+  if (!conversation) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto flex max-w-3xl flex-col">
+      <header className="flex items-center gap-3 border-b border-white/10 pb-5">
+        <CharacterAvatar
+          name={conversation.character.name}
+          gradient={conversation.character.avatarUrl}
+          size="sm"
+        />
+
+        <div>
+          <h1 className="font-medium">
+            {conversation.character.name}
+          </h1>
+
+          <p className="text-sm text-white/45">
+            Conversation preview
+          </p>
+        </div>
+      </header>
+
+      <div className="min-h-[48vh] space-y-4 py-7">
+        {conversation.messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex gap-3 ${
+              message.role === 'USER' ? 'justify-end' : ''
+            }`}
+          >
+            {message.role !== 'USER' ? (
+              <Bot className="mt-1 size-4 shrink-0 text-fuchsia-200" />
+            ) : null}
+
+            <p
+              className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-6 ${
+                message.role === 'USER'
+                  ? 'bg-white text-[#170d20]'
+                  : 'bg-white/[0.07] text-white/75'
+              }`}
+            >
+              {message.content}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-fuchsia-200/15 bg-fuchsia-200/[0.05] px-4 py-3 text-xs text-fuchsia-100/70">
+        Live AI replies arrive in the next phase. This conversation is saved
+        and ready for that connection.
+      </div>
+
+      <form className="mt-4 flex gap-2">
+        <input
+          disabled
+          placeholder="Live messaging is coming next…"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm text-white/50"
+        />
+
+        <button
+          disabled
+          className="grid size-11 place-items-center rounded-xl bg-white/15 text-white/45"
+        >
+          <Send className="size-4" />
+        </button>
+      </form>
+    </div>
+  );
+}

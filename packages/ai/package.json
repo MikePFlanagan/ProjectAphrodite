@@ -12,7 +12,7 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^4.0.13",
+    "@ai-sdk/openai": "^2.0.111",
     "ai": "^5.0.212",
     "zod": "^3.24.0"
   },
