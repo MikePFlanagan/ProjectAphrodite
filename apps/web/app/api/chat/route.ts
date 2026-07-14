@@ -76,6 +76,22 @@ export async function POST(request: Request) {
     );
   }
 
+  const memories = await db.memory.findMany({
+  where: {
+    userId: session.user.id,
+    characterId: conversation.character.id,
+  },
+  orderBy: [
+    {
+      importance: 'desc',
+    },
+    {
+      updatedAt: 'desc',
+    },
+  ],
+  take: 20,
+});
+
   const chatContext: ChatContext = {
     user: {
       id: session.user.id,
@@ -94,7 +110,15 @@ export async function POST(request: Request) {
     conversation: {
       id: conversation.id,
     },
+    memories: memories.map((memory) => ({
+  id: memory.id,
+  key: memory.key,
+  value: memory.value,
+  importance: memory.importance,
+  })),
   };
+
+  
 
   await db.$transaction([
     db.message.create({

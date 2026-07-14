@@ -9,11 +9,31 @@ export function createMockResponse({
   context,
   userMessage,
 }: MockResponseInput): string {
-  const normalizedMessage = userMessage.trim().toLowerCase();
-  const { user, character } = context;
+  const normalizedMessage =
+    userMessage.trim().toLowerCase();
+
+  const { user, character, memories } = context;
 
   if (normalizedMessage.includes('what is my name')) {
     return `Your name is ${user.name}.`;
+  }
+
+  if (
+    normalizedMessage.includes('what do you remember') ||
+    normalizedMessage.includes('what do you know about me')
+  ) {
+    if (memories.length === 0) {
+      return `I don't have any saved memories about you yet, ${user.name}.`;
+    }
+
+    const memoryList = memories
+      .map(
+        (memory) =>
+          `- **${formatMemoryKey(memory.key)}:** ${memory.value}`,
+      )
+      .join('\n');
+
+    return `Here is what I remember about you, ${user.name}:\n\n${memoryList}`;
   }
 
   if (
@@ -36,5 +56,15 @@ You said:
 
 "${userMessage}"
 
-This response came from the mock provider.`;
+I currently have ${memories.length} saved ${
+    memories.length === 1 ? 'memory' : 'memories'
+  } about you.`;
+}
+
+function formatMemoryKey(key: string): string {
+  return key
+    .replaceAll('_', ' ')
+    .replace(/\b\w/g, (character) =>
+      character.toUpperCase(),
+    );
 }

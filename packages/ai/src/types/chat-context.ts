@@ -1,3 +1,10 @@
+export type ChatMemory = {
+  id: string;
+  key: string;
+  value: string;
+  importance: number;
+};
+
 export type ChatContext = {
   user: {
     id: string;
@@ -17,4 +24,6 @@ export type ChatContext = {
   conversation: {
     id: string;
   };
+
+  memories: ChatMemory[];
 };
