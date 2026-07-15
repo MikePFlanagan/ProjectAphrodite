@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Brain,
   CreditCard,
+  MessageCircleHeart,
   UserRound,
 } from 'lucide-react';
 
@@ -22,7 +23,7 @@ export default async function SettingsPage() {
       </h1>
 
       <p className="mt-3 text-sm leading-6 text-white/45">
-        Manage your profile, billing, and what your companions remember.
+        Manage your account, memories, relationships, and subscription.
       </p>
 
       <div className="mt-10 space-y-4">
@@ -33,7 +34,10 @@ export default async function SettingsPage() {
             </div>
 
             <div>
-              <p className="text-sm font-medium">Profile</p>
+              <p className="text-sm font-medium">
+                Profile
+              </p>
+
               <p className="text-xs text-white/35">
                 Your account identity
               </p>
@@ -42,12 +46,18 @@ export default async function SettingsPage() {
 
           <dl className="mt-5 space-y-4 text-sm">
             <div className="flex justify-between border-b border-white/8 pb-3">
-              <dt className="text-white/45">Name</dt>
+              <dt className="text-white/45">
+                Name
+              </dt>
+
               <dd>{user.name ?? 'Not set'}</dd>
             </div>
 
             <div className="flex justify-between">
-              <dt className="text-white/45">Email</dt>
+              <dt className="text-white/45">
+                Email
+              </dt>
+
               <dd>{user.email}</dd>
             </div>
           </dl>
@@ -76,6 +86,29 @@ export default async function SettingsPage() {
           <ArrowRight className="size-4 text-white/30 transition group-hover:translate-x-0.5 group-hover:text-white" />
         </Link>
 
+        <Link
+          href="/settings/relationship"
+          className="group flex items-center justify-between rounded-2xl border border-violet-200/15 bg-gradient-to-br from-violet-300/[0.08] to-fuchsia-400/[0.035] p-5 transition hover:border-violet-200/25 hover:bg-violet-300/[0.1]"
+        >
+          <div className="flex items-center gap-3">
+            <div className="grid size-10 place-items-center rounded-xl bg-violet-300/[0.1] text-violet-100">
+              <MessageCircleHeart className="size-4" />
+            </div>
+
+            <div>
+              <p className="text-sm font-medium text-white">
+                Relationship Center
+              </p>
+
+              <p className="mt-1 text-xs text-white/40">
+                See how each companion relationship evolves
+              </p>
+            </div>
+          </div>
+
+          <ArrowRight className="size-4 text-white/30 transition group-hover:translate-x-0.5 group-hover:text-white" />
+        </Link>
+
         <section
           id="billing"
           className="rounded-2xl border border-white/10 bg-white/[0.035] p-5"
@@ -86,7 +119,10 @@ export default async function SettingsPage() {
             </div>
 
             <div>
-              <p className="text-sm font-medium">Billing</p>
+              <p className="text-sm font-medium">
+                Billing
+              </p>
+
               <p className="text-xs text-white/35">
                 Subscription and payment settings
               </p>

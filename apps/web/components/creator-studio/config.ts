@@ -68,7 +68,10 @@ export const studioSections: StudioSection[] = [
 
 export const defaultCompanionDraft: CompanionDraft = {
   name: 'New Companion',
+  slug: 'new-companion',
   tagline: 'An original Aphrodite companion',
+  description:
+    'A warm, curious companion ready to grow through meaningful conversations.',
   greeting:
     "Hi. I'm excited to meet you and begin creating something meaningful together.",
   category: 'Friendly',

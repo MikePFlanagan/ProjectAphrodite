@@ -19,7 +19,9 @@ export type StudioSection = {
 
 export type CompanionDraft = {
   name: string;
+  slug: string;
   tagline: string;
+  description: string;
   greeting: string;
   category: string;
   traits: string[];

@@ -61,6 +61,10 @@ export function StudioPreview({
             {companion.tagline}
           </p>
 
+          <p className="mt-3 text-sm leading-6 text-white/38">
+            {companion.description}
+          </p>
+
           <div className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
               <MessageCircle className="size-3.5" />
