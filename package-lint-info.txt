@@ -1,0 +1,39 @@
+{
+  "name": "@aphrodite/ui", "private": true, "version": "0.0.0", "type": "module",
+  "exports": { ".": "./src/index.ts", "./button": "./src/button.tsx" },
+  "scripts": { "lint": "eslint .", "typecheck": "tsc --noEmit", "build": "tsc --noEmit" },
+  "peerDependencies": { "react": "^19.0.0", "react-dom": "^19.0.0" },
+  "devDependencies": { "@aphrodite/config": "workspace:*", "@types/react": "^19.0.0", "typescript": "^5.8.0" }
+}
+========================
+{
+  "name": "@aphrodite/ai",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.111",
+    "ai": "^5.0.212",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@aphrodite/config": "workspace:*",
+    "typescript": "^5.8.0"
+  }
+}
+========================
+{
+  "name": "@aphrodite/database", "private": true, "version": "0.0.0", "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "generate": "prisma generate --schema ../../prisma/schema.prisma", "migrate": "prisma migrate dev --schema ../../prisma/schema.prisma", "seed": "tsx ../../prisma/seed.ts", "studio": "prisma studio --schema ../../prisma/schema.prisma", "validate": "prisma validate --schema ../../prisma/schema.prisma", "lint": "eslint .", "typecheck": "tsc --noEmit", "build": "tsc --noEmit" },
+  "dependencies": { "@prisma/client": "^6.0.0" },
+  "devDependencies": { "@aphrodite/config": "workspace:*", "prisma": "^6.0.0", "tsx": "^4.0.0", "typescript": "^5.8.0" }
+}
