@@ -3,7 +3,23 @@ import path from 'node:path';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@aphrodite/ui', '@aphrodite/ai', '@aphrodite/auth', '@aphrodite/database'],
+
+  transpilePackages: [
+    '@aphrodite/ui',
+    '@aphrodite/ai',
+    '@aphrodite/auth',
+    '@aphrodite/database',
+  ],
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
+
   turbopack: {
     // Prevent Turbopack from walking above this pnpm workspace to an unrelated lockfile.
     root: path.resolve(__dirname, '../..'),

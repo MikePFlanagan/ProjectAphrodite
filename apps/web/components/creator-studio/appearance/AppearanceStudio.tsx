@@ -9,6 +9,7 @@ import { CreationJourney } from './CreationJourney';
 import { CreatorAssistant } from './CreatorAssistant';
 import { PromptBuilder } from './PromptBuilder';
 import { ReferenceLibrary } from './ReferenceLibrary';
+import { VisualPreviewCanvas } from './VisualPreviewCanvas';
 import {
   characterLocks as initialCharacterLocks,
   promptFields,
@@ -76,7 +77,7 @@ export function AppearanceStudio() {
         onChange={setAssetType}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(280px,1fr)]">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(360px,1fr)]">
         <div className="min-w-0 space-y-6">
           <PromptBuilder
             values={promptValues}
@@ -90,6 +91,13 @@ export function AppearanceStudio() {
         </div>
 
         <aside className="min-w-0 space-y-6">
+          <VisualPreviewCanvas
+            key={assetType}
+            assetType={assetType}
+            promptValues={promptValues}
+            locks={locks}
+          />
+
           <CharacterLockPanel
             locks={locks}
             onToggle={handleLockToggle}
