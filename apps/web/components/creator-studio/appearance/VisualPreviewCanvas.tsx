@@ -24,7 +24,7 @@ import type {
   AppearanceAssetType,
   CharacterLock,
 } from './types';
-
+import { EntitySummaryCard } from './preview/EntitySummaryCard';
 type PromptValues = Record<string, string>;
 
 type GenerationStatus =
@@ -505,7 +505,8 @@ export function VisualPreviewCanvas({
               locking the appearance.
             </p>
           )}
-
+        <EntitySummaryCard entityDna={entityDna} />
+        
         <div className="grid gap-4 rounded-[20px] border border-white/[0.08] bg-black/20 p-4 sm:grid-cols-2">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/25">
