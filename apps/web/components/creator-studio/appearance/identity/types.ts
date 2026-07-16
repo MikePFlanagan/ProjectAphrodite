@@ -70,6 +70,8 @@ export type CharacterIdentitySnapshot = {
 };
 
 export type IdentityPromptValues = {
+  sex?: string;
+  age?: string;
   subject?: string;
   hair?: string;
   eyes?: string;

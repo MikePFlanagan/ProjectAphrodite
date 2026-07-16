@@ -111,7 +111,9 @@ export function buildIdentitySnapshot({
     hair: normalizeValue(promptValues.hair),
     eyes: normalizeValue(promptValues.eyes),
     body: buildBodyValue(promptValues),
-    age: inferAgeValue(promptValues.subject),
+    age:
+      normalizeValue(promptValues.age) ??
+      inferAgeValue(promptValues.subject),
     style: normalizeValue(promptValues.style),
   };
 

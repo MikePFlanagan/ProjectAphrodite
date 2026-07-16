@@ -11,3 +11,11 @@ coverage
 # Local source archives
 ProjectAphrodite_Source.zip
 *.zip
+
+# Local diagnostic output
+logs/
+*.log
+
+# Local diagnostic output
+logs/
+*.log

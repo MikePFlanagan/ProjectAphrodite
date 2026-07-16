@@ -7,6 +7,7 @@ import { AssetTypePicker } from './AssetTypePicker';
 import { CharacterLockPanel } from './CharacterLock';
 import { CreationJourney } from './CreationJourney';
 import { CreatorAssistant } from './CreatorAssistant';
+import { CoreIdentityFields } from './CoreIdentityFields';
 import { PromptBuilder } from './PromptBuilder';
 import { ReferenceLibrary } from './ReferenceLibrary';
 import { VisualPreviewCanvas } from './VisualPreviewCanvas';
@@ -22,9 +23,13 @@ import type {
 type PromptValues = Record<string, string>;
 
 function createInitialPromptValues(): PromptValues {
-  return Object.fromEntries(
-    promptFields.map((field) => [field.id, '']),
-  );
+  return {
+    sex: '',
+    age: '',
+    ...Object.fromEntries(
+      promptFields.map((field) => [field.id, '']),
+    ),
+  };
 }
 
 export function AppearanceStudio() {
@@ -79,6 +84,11 @@ export function AppearanceStudio() {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(360px,1fr)]">
         <div className="min-w-0 space-y-6">
+          <CoreIdentityFields
+            values={promptValues}
+            onChange={handlePromptChange}
+          />
+
           <PromptBuilder
             values={promptValues}
             onChange={handlePromptChange}

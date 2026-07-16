@@ -1,0 +1,11 @@
+# Apple Silicon development override.
+#
+# Usage:
+# docker compose \
+#   -f docker/compose.yml \
+#   -f docker/compose.m1.yml \
+#   up -d
+
+services:
+  postgres:
+    platform: linux/arm64

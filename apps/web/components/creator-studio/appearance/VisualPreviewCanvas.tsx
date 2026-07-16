@@ -19,7 +19,6 @@ import {
   type CharacterIdentitySnapshot,
   type IdentityTraitKey,
 } from './identity';
-import { generateMockPreview } from './providers/MockImageProvider';
 import type {
   AppearanceAssetType,
   CharacterLock,
@@ -95,8 +94,8 @@ export function VisualPreviewCanvas({
     () => ({
       schemaVersion: '1.0',
       mode: 'preview',
-      provider: 'mock',
-      model: 'mock-placeholder',
+      provider: 'comfyui',
+      model: 'flux1-schnell-fp8.safetensors',
       assetType,
       prompt: promptValues,
       characterLocks: enabledTraitKeys,
@@ -146,10 +145,39 @@ export function VisualPreviewCanvas({
     setErrorMessage(null);
 
     try {
-      const result = await generateMockPreview(
-        assetType,
-        previewUrl ?? undefined,
-      );
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: compiledPrompt,
+          width: 512,
+          height: 512,
+          steps: 4,
+          cfg: 1,
+          model:
+            'flux1-schnell-fp8.safetensors',
+        }),
+      });
+
+      const result = (await response.json()) as {
+        success: boolean;
+        imageUrl?: string;
+        promptId?: string;
+        error?: string;
+      };
+
+      if (
+        !response.ok ||
+        !result.success ||
+        !result.imageUrl
+      ) {
+        throw new Error(
+          result.error ??
+            'Image generation failed.',
+        );
+      }
 
       setPreviewUrl(result.imageUrl);
       setGenerationCount(
@@ -181,8 +209,8 @@ export function VisualPreviewCanvas({
       promptValues,
       enabledTraitKeys,
       previewImageUrl: previewUrl,
-      provider: 'mock',
-      model: 'mock-placeholder',
+      provider: 'comfyui',
+      model: 'flux1-schnell-fp8.safetensors',
       seed: null,
       promptVersion: 1,
     });
