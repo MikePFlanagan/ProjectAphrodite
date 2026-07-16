@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+import type { EntityDNA } from '../../../lib/entity-dna';
 import {
   buildIdentitySnapshot,
   type CharacterIdentitySnapshot,
@@ -34,12 +35,14 @@ type GenerationStatus =
 
 type VisualPreviewCanvasProps = {
   assetType: AppearanceAssetType;
+  entityDna: EntityDNA;
   promptValues: PromptValues;
   locks: CharacterLock[];
 };
 
 export function VisualPreviewCanvas({
   assetType,
+  entityDna,
   promptValues,
   locks,
 }: VisualPreviewCanvasProps) {
@@ -68,14 +71,36 @@ export function VisualPreviewCanvas({
       null,
     );
 
-  const compiledPrompt = useMemo(
-    () =>
-      Object.values(promptValues)
-        .map((value) => value.trim())
-        .filter(Boolean)
-        .join(', '),
-    [promptValues],
-  );
+  const compiledPrompt = useMemo(() => {
+    const identity = entityDna.identity;
+
+    const entityDetails = [
+      identity.name
+        ? `named ${identity.name}`
+        : '',
+      entityDna.family,
+      identity.species,
+      identity.breedOrSubtype,
+      identity.sex !== 'unknown' &&
+      identity.sex !== 'not-applicable'
+        ? identity.sex
+        : '',
+      identity.age !== null
+        ? `${identity.age} years old`
+        : '',
+    ];
+
+    const appearanceDetails =
+      Object.values(promptValues);
+
+    return [
+      ...entityDetails,
+      ...appearanceDetails,
+    ]
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .join(', ');
+  }, [entityDna, promptValues]);
 
   const enabledLocks = useMemo(
     () => locks.filter((lock) => lock.enabled),
@@ -97,12 +122,14 @@ export function VisualPreviewCanvas({
       provider: 'comfyui',
       model: 'flux1-schnell-fp8.safetensors',
       assetType,
+      entity: entityDna,
       prompt: promptValues,
       characterLocks: enabledTraitKeys,
       compiledPrompt,
     }),
     [
       assetType,
+      entityDna,
       promptValues,
       enabledTraitKeys,
       compiledPrompt,
@@ -152,12 +179,16 @@ export function VisualPreviewCanvas({
         },
         body: JSON.stringify({
           prompt: compiledPrompt,
-          width: 512,
-          height: 512,
-          steps: 4,
-          cfg: 1,
+          width:
+            entityDna.generationDefaults.width,
+          height:
+            entityDna.generationDefaults.height,
+          steps:
+            entityDna.generationDefaults.steps,
+          cfg:
+            entityDna.generationDefaults.cfg,
           model:
-            'flux1-schnell-fp8.safetensors',
+            entityDna.generationDefaults.model,
         }),
       });
 

@@ -2,6 +2,11 @@
 
 import { useMemo, useState } from 'react';
 
+import {
+  createDefaultEntityDna,
+  type EntityDNA,
+  type EntityFamily,
+} from '../../../lib/entity-dna';
 import { AssetGallery } from './AssetGallery';
 import { AssetTypePicker } from './AssetTypePicker';
 import { CharacterLockPanel } from './CharacterLock';
@@ -23,13 +28,30 @@ import type {
 type PromptValues = Record<string, string>;
 
 function createInitialPromptValues(): PromptValues {
-  return {
-    sex: '',
-    age: '',
-    ...Object.fromEntries(
-      promptFields.map((field) => [field.id, '']),
-    ),
-  };
+  return Object.fromEntries(
+    promptFields.map((field) => [field.id, '']),
+  );
+}
+
+function getDefaultSpecies(
+  family: EntityFamily,
+): string {
+  switch (family) {
+    case 'human':
+      return 'human';
+    case 'animal':
+      return '';
+    case 'fantasy':
+      return '';
+    case 'robot':
+      return 'robot';
+    case 'alien':
+      return 'alien';
+    case 'mascot':
+      return '';
+    case 'custom':
+      return '';
+  }
 }
 
 export function AppearanceStudio() {
@@ -40,6 +62,11 @@ export function AppearanceStudio() {
 
   const [assetType, setAssetType] =
     useState<AppearanceAssetType>('portrait');
+
+  const [entityDna, setEntityDna] =
+    useState<EntityDNA>(() =>
+      createDefaultEntityDna('human'),
+    );
 
   const [promptValues, setPromptValues] =
     useState<PromptValues>(initialPromptValues);
@@ -60,6 +87,48 @@ export function AppearanceStudio() {
 
   function handlePromptReset() {
     setPromptValues(initialPromptValues);
+  }
+
+  function handleFamilyChange(
+    family: EntityFamily,
+  ) {
+    setEntityDna((current) => ({
+      ...current,
+      family,
+      identity: {
+        ...current.identity,
+        species: getDefaultSpecies(family),
+        age:
+          family === 'human'
+            ? Math.max(current.identity.age ?? 18, 18)
+            : current.identity.age,
+        sex:
+          family === 'robot'
+            ? 'not-applicable'
+            : current.identity.sex,
+      },
+      metadata: {
+        ...current.metadata,
+        updatedAt: new Date().toISOString(),
+      },
+    }));
+  }
+
+  function handleIdentityChange(
+    field: keyof EntityDNA['identity'],
+    value: string | number | null,
+  ) {
+    setEntityDna((current) => ({
+      ...current,
+      identity: {
+        ...current.identity,
+        [field]: value,
+      },
+      metadata: {
+        ...current.metadata,
+        updatedAt: new Date().toISOString(),
+      },
+    }));
   }
 
   function handleLockToggle(lockId: string) {
@@ -85,8 +154,9 @@ export function AppearanceStudio() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(360px,1fr)]">
         <div className="min-w-0 space-y-6">
           <CoreIdentityFields
-            values={promptValues}
-            onChange={handlePromptChange}
+            entityDna={entityDna}
+            onFamilyChange={handleFamilyChange}
+            onIdentityChange={handleIdentityChange}
           />
 
           <PromptBuilder
@@ -104,6 +174,7 @@ export function AppearanceStudio() {
           <VisualPreviewCanvas
             key={assetType}
             assetType={assetType}
+            entityDna={entityDna}
             promptValues={promptValues}
             locks={locks}
           />
