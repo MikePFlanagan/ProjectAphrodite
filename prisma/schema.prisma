@@ -108,6 +108,7 @@ model Character {
   personalityPrompt String            @db.Text
   greeting          String            @db.Text
   category          CharacterCategory
+  entityDna         Json?
   isFeatured        Boolean           @default(false)
   isPublished       Boolean           @default(false)
   creatorId         String?
