@@ -67,7 +67,7 @@ export const studioSections: StudioSection[] = [
 ];
 
 export const defaultCompanionDraft: CompanionDraft = {
-  name: 'New Companion',
+  name: 'New AI Model',
   slug: 'new-companion',
   tagline: 'An original Aphrodite companion',
   description:

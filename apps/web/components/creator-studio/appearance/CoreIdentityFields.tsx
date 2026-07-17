@@ -51,7 +51,7 @@ export function CoreIdentityFields({
     <section className="rounded-[24px] border border-white/[0.08] bg-white/[0.025] p-5">
       <div>
         <p className="text-sm font-semibold text-white">
-          Entity DNA
+          AI Model Profile
         </p>
 
         <p className="mt-1 text-xs leading-5 text-white/35">

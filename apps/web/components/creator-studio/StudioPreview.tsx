@@ -22,7 +22,7 @@ export function StudioPreview({
           </p>
 
           <p className="mt-1 text-sm text-white/50">
-            Companion profile
+            AI Model Profile
           </p>
         </div>
 

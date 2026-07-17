@@ -48,7 +48,7 @@ export function StudioSidebar({
               </p>
 
               <p className="mt-0.5 text-xs text-white/35">
-                Companion draft
+                AI Model Draft
               </p>
             </div>
           </div>
