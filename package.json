@@ -18,13 +18,13 @@
     "db:seed": "pnpm --filter @aphrodite/database seed",
     "db:studio": "pnpm --filter @aphrodite/database studio",
     "db:validate": "pnpm --filter @aphrodite/database validate",
-    "dev:all": "./scripts/dev-all.sh",
-    "dev:down": "./scripts/dev-down.sh",
     "dev:check": "./scripts/check-dev-environment.sh",
     "comfy:start": "./scripts/start-comfyui.sh",
     "comfy:stop": "./scripts/stop-comfyui.sh",
     "docker:m1:up": "DOCKER_DEFAULT_PLATFORM=linux/arm64 docker compose -f docker/compose.yml -f docker/compose.m1.yml up -d",
-    "docker:m1:down": "docker compose -f docker/compose.yml -f docker/compose.m1.yml down"
+    "docker:m1:down": "docker compose -f docker/compose.yml -f docker/compose.m1.yml down",
+    "dev:start": "./scripts/dev-start.sh",
+    "dev:stop": "./scripts/dev-stop.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
