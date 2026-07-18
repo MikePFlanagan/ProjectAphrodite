@@ -8,6 +8,7 @@ The project currently follows an alpha-stage release process.
 
 ### Added
 
+- Character-scoped durable memories and rolling conversation summaries
 - Stripe Checkout, customer billing portal, verified subscription webhooks, and synchronized paid access
 - In-context Premium upgrade prompts when Free chat quotas are exhausted
 - Live streaming character chat with persistent user and assistant messages

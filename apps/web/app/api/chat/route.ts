@@ -11,6 +11,7 @@ import {
   estimatedCostMicros,
   utcDayWindow,
 } from '@/lib/chat-usage';
+import { refreshConversationRetention } from '@/lib/retention';
 
 export const runtime = 'nodejs';
 
@@ -55,7 +56,15 @@ export async function POST(request: Request) {
         userId: session.user.id,
       },
       include: {
-        character: true,
+        character: {
+          include: {
+            memories: {
+              where: { userId: session.user.id },
+              orderBy: [{ importance: 'desc' }, { updatedAt: 'desc' }],
+              take: 12,
+            },
+          },
+        },
         messages: {
           orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
           take: 40,
@@ -122,6 +131,11 @@ export async function POST(request: Request) {
         tagline: conversation.character.tagline,
         description: conversation.character.description,
         personalityPrompt: conversation.character.personalityPrompt,
+        conversationSummary: conversation.summary,
+        memories: conversation.character.memories.map((memory) => ({
+          key: memory.key,
+          value: memory.value,
+        })),
       }),
       messages: [
         ...[...conversation.messages].reverse().map((message) => ({
@@ -178,6 +192,33 @@ export async function POST(request: Request) {
             },
           }),
         ]);
+
+        const userMessageCount = await db.message.count({
+          where: { conversationId, role: 'USER' },
+        });
+
+        if (userMessageCount % 5 === 0) {
+          try {
+            await refreshConversationRetention({
+              userId: session.user.id,
+              characterId: conversation.characterId,
+              conversationId,
+              characterName: conversation.character.name,
+              previousSummary: conversation.summary,
+              modelName,
+              messages: [
+                ...[...conversation.messages].reverse().map((message) => ({
+                  role: message.role,
+                  content: message.content,
+                })),
+                { role: 'USER' as const, content },
+                { role: 'ASSISTANT' as const, content: assistantText },
+              ],
+            });
+          } catch (error) {
+            console.error('Conversation retention refresh failed:', error);
+          }
+        }
       },
     });
 
