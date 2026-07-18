@@ -42,7 +42,7 @@ export function StudioCanvas({ activeSection, companion, onCompanionChange }: St
         {activeSection === 'identity' ? (
           <IdentityEditor companion={companion} onChange={onCompanionChange} />
         ) : activeSection === 'appearance' ? (
-          <AppearanceStudio />
+          <AppearanceStudio draftId={companion.id} />
         ) : (
           <GenericCanvasPlaceholder sectionTitle={content.title} />
         )}
