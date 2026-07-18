@@ -1,5 +1,6 @@
-import { ArrowRight, Construction } from 'lucide-react';
+import { Construction } from 'lucide-react';
 
+import { AppearanceStudio } from './appearance/AppearanceStudio';
 import { sectionPlaceholderContent } from './config';
 import { IdentityEditor } from './IdentityEditor';
 import type { CompanionDraft, StudioSectionId } from './types';
@@ -17,7 +18,9 @@ export function StudioCanvas({ activeSection, companion, onCompanionChange }: St
 
   return (
     <main className="min-w-0 bg-[#09070d] p-5 sm:p-7 xl:p-8">
-      <section className="mx-auto max-w-3xl">
+      <section
+        className={activeSection === 'appearance' ? 'mx-auto max-w-7xl' : 'mx-auto max-w-3xl'}
+      >
         <div className="flex items-start gap-4">
           <div className="border-fuchsia-200/12 grid size-12 shrink-0 place-items-center rounded-2xl border bg-fuchsia-300/[0.075] text-fuchsia-100">
             <Icon className="size-5" />
@@ -39,39 +42,12 @@ export function StudioCanvas({ activeSection, companion, onCompanionChange }: St
         {activeSection === 'identity' ? (
           <IdentityEditor companion={companion} onChange={onCompanionChange} />
         ) : activeSection === 'appearance' ? (
-          <AppearanceCanvasPlaceholder />
+          <AppearanceStudio />
         ) : (
           <GenericCanvasPlaceholder sectionTitle={content.title} />
         )}
       </section>
     </main>
-  );
-}
-
-function AppearanceCanvasPlaceholder() {
-  return (
-    <div className="mt-8">
-      <div className="border-fuchsia-200/12 rounded-[26px] border bg-gradient-to-br from-fuchsia-300/[0.07] via-violet-300/[0.025] to-transparent p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.17em] text-fuchsia-200/50">
-          Full creation workflow
-        </p>
-
-        <h3 className="mt-2 text-xl font-semibold text-white">Appearance Generator</h3>
-
-        <p className="mt-2 max-w-xl text-sm leading-6 text-white/40">
-          This canvas will contain the complete generation interface: modes, models, uploads,
-          prompt, aspect ratio, output count, generation history, and results.
-        </p>
-
-        <button
-          type="button"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-white/65"
-        >
-          Planned for Creator Studio Alpha
-          <ArrowRight className="size-4" />
-        </button>
-      </div>
-    </div>
   );
 }
 
