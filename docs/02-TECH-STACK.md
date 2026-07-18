@@ -2,22 +2,22 @@
 
 ## Core Stack
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| Web framework | Next.js 16 | App Router, server rendering, route handlers |
-| UI library | React 19 | Component-based user interface |
-| Language | TypeScript | Static typing and safer refactoring |
-| Styling | Tailwind CSS 4 | Rapid, consistent interface development |
-| Authentication | Auth.js 5 | Sessions and credentials authentication |
-| ORM | Prisma 6 | Type-safe database access and migrations |
-| Database | PostgreSQL 17 | Relational application storage |
-| Package manager | pnpm | Fast workspace dependency management |
-| Monorepo tooling | Turborepo | Coordinated builds, linting, and type checks |
-| Validation | Zod | Server and client input validation |
-| Icons | Lucide React | Consistent icon system |
-| Animation | Framer Motion | Marketing and interface animation |
-| Containers | Docker Compose | Local PostgreSQL development |
-| CI | GitHub Actions | Automated project validation |
+| Layer            | Technology     | Purpose                                      |
+| ---------------- | -------------- | -------------------------------------------- |
+| Web framework    | Next.js 16     | App Router, server rendering, route handlers |
+| UI library       | React 19       | Component-based user interface               |
+| Language         | TypeScript     | Static typing and safer refactoring          |
+| Styling          | Tailwind CSS 4 | Rapid, consistent interface development      |
+| Authentication   | Auth.js 5      | Sessions and credentials authentication      |
+| ORM              | Prisma 6       | Type-safe database access and migrations     |
+| Database         | PostgreSQL 17  | Relational application storage               |
+| Package manager  | pnpm           | Fast workspace dependency management         |
+| Monorepo tooling | Turborepo      | Coordinated builds, linting, and type checks |
+| Validation       | Zod            | Server and client input validation           |
+| Icons            | Lucide React   | Consistent icon system                       |
+| Animation        | Framer Motion  | Marketing and interface animation            |
+| Containers       | Docker Compose | Local PostgreSQL development                 |
+| CI               | GitHub Actions | Automated project validation                 |
 
 ## Next.js
 
@@ -161,9 +161,9 @@ The planned implementation includes:
 
 The initial implementation should use one provider before introducing multi-provider complexity.
 
-## Planned Payments Stack
+## Payments Stack
 
-Stripe is planned for:
+Stripe provides:
 
 - Checkout
 - Recurring subscriptions
@@ -171,4 +171,5 @@ Stripe is planned for:
 - Webhook processing
 - Subscription status synchronization
 
-Stripe integration must not be considered complete until webhook events are verified server-side.
+Incoming lifecycle events are verified against the raw request body before subscription state is
+synchronized. Paid authorization is derived from persisted, webhook-confirmed state.

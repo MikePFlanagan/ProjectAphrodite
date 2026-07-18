@@ -84,7 +84,8 @@ It is responsible for:
 - Favorites
 - Conversations
 - Settings
-- Creator and billing placeholders
+- Creator Studio
+- Subscription billing
 - Auth.js route handling
 
 ## Routing
@@ -196,17 +197,12 @@ Used for:
 - Forms
 - Favorite buttons
 - Menus
-- Future streaming chat controls
+- Streaming chat controls
 
 ## Current Limitations
 
 The current application does not yet include:
 
-- Live AI responses
-- Streaming message generation
-- Rate limiting
-- Usage metering
-- Stripe checkout
 - Production logging
 - Automated end-to-end tests
 - Long-term memory extraction
