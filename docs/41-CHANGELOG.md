@@ -8,14 +8,11 @@ The project currently follows an alpha-stage release process.
 
 ### Added
 
+- Stripe Checkout, customer billing portal, verified subscription webhooks, and synchronized paid access
 - Live streaming character chat with persistent user and assistant messages
 - Plan-aware daily chat limits enforced server-side
 - Per-conversation token usage and configurable cost telemetry
 - Recoverable composer states for provider and quota failures
-
-### Planned
-
-- Stripe subscription integration
 
 ## v0.2.0-alpha
 

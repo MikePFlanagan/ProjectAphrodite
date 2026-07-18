@@ -1,6 +1,6 @@
 # Project Aphrodite
 
-Original AI companion SaaS platform with a public marketing page, credential authentication, protected character browsing, saved starter conversations, and safe demo data. Live AI generation and billing remain intentionally out of scope.
+Original AI companion SaaS platform with credential authentication, protected character browsing, persistent live AI conversations, creator identity tooling, and Stripe subscription billing.
 
 ## Architecture
 
@@ -57,19 +57,26 @@ Required when enabling AI generation:
 - `CHAT_DAILY_LIMIT_FREE`, `CHAT_DAILY_LIMIT_PREMIUM`, and `CHAT_DAILY_LIMIT_CREATOR` — optional UTC daily message allowances.
 - `OPENAI_INPUT_COST_PER_MILLION` and `OPENAI_OUTPUT_COST_PER_MILLION` — optional USD rates used to estimate per-response cost telemetry.
 
-Required when billing routes are implemented:
+Required for Stripe billing:
 
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `STRIPE_PREMIUM_PRICE_ID` — recurring $19/month Premium Price.
+
+Register `/api/billing/webhook` as a Stripe webhook endpoint for
+`checkout.session.completed`, `customer.subscription.created`,
+`customer.subscription.updated`, and `customer.subscription.deleted`.
+Premium authorization is granted only for `active` and `trialing` subscriptions. A scheduled
+cancellation retains access through the paid period; incomplete, past-due, or ended subscriptions
+fall back to Free limits.
 
 ## Current application routes
 
 - Public: `/`, `/login`, `/signup`
-- Protected: `/dashboard`, `/explore`, `/favorites`, `/settings`, `/characters/[slug]`, and `/chat/[conversationId]`
+- Protected: `/dashboard`, `/explore`, `/favorites`, `/settings`, `/billing`, `/creator`, `/characters/[slug]`, and `/chat/[conversationId]`
 
 Character and conversation access is enforced in server components/actions; URL changes cannot expose another member's conversation. Live chat streams character-specific responses, persists both sides of the conversation, enforces plan-aware daily limits, and records token usage per conversation.
 
 ## Deliberate next steps
 
-Add email/OAuth providers, deeper safety controls, conversation-memory extraction, and Stripe checkout/webhooks. Keep those features behind server-side authorization and audit logging.
+Add email/OAuth providers, deeper safety controls, and conversation-memory extraction. Keep those features behind server-side authorization and audit logging.
