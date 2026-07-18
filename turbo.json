@@ -2,7 +2,11 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
-    "build": { "dependsOn": ["^build"], "outputs": [".next/**", "dist/**"] },
+    "build": {
+      "dependsOn": ["^build"],
+      "env": ["AUTH_SECRET", "DATABASE_URL", "NEXTAUTH_URL"],
+      "outputs": [".next/**", "dist/**"]
+    },
     "dev": { "cache": false, "persistent": true },
     "lint": { "dependsOn": ["^lint"], "outputs": [] },
     "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] }

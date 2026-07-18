@@ -3,6 +3,10 @@ on: [pull_request, push]
 jobs:
   quality:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://aphrodite:aphrodite@localhost:5433/aphrodite?schema=public
+      AUTH_SECRET: ci-only-secret-that-is-at-least-32-characters
+      NEXTAUTH_URL: http://localhost:3002
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
