@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { AssetTypePicker } from './AssetTypePicker';
 import { CharacterLockPanel } from './CharacterLock';
@@ -19,6 +19,35 @@ export function AppearanceStudio() {
   const [results, setResults] = useState<MockGenerationResult[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadHistory() {
+      try {
+        const response = await fetch('/api/creator/assets');
+        if (!response.ok) throw new Error('Could not load saved assets.');
+        const data = (await response.json()) as { assets: MockGenerationResult[] };
+        if (!active) return;
+        setResults(data.assets);
+        setSelectedId(data.assets[0]?.id ?? null);
+      } catch {
+        if (active)
+          setHistoryError(
+            'Saved assets could not be loaded. You can still generate new variations.',
+          );
+      } finally {
+        if (active) setIsLoadingHistory(false);
+      }
+    }
+
+    void loadHistory();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   function updatePrompt(field: string, value: string) {
     setPromptValues((current) => ({ ...current, [field]: value }));
@@ -44,8 +73,18 @@ export function AppearanceStudio() {
         locks,
         variation: results.length + 1,
       });
-      setResults((current) => [nextResult, ...current]);
-      setSelectedId(nextResult.id);
+      const response = await fetch('/api/creator/assets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nextResult),
+      });
+      if (!response.ok) throw new Error('Could not save generated asset.');
+      const data = (await response.json()) as { asset: MockGenerationResult };
+      setResults((current) => [data.asset, ...current]);
+      setSelectedId(data.asset.id);
+      setHistoryError(null);
+    } catch {
+      setHistoryError('That variation could not be saved. Please try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -61,6 +100,8 @@ export function AppearanceStudio() {
           <GenerationHistory
             results={results}
             selectedId={selectedId}
+            isLoading={isLoadingHistory}
+            error={historyError}
             onSelect={(result) => setSelectedId(result.id)}
           />
         </div>
