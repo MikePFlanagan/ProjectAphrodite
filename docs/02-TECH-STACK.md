@@ -162,6 +162,10 @@ The planned implementation includes:
 
 The initial implementation should use one provider before introducing multi-provider complexity.
 
+## Voice Stack
+
+Voice infrastructure is provider-neutral. Creator previews currently use device voices; the production target is a self-hosted WebRTC pipeline with local speech recognition and synthesis. See [Voice Architecture](./03-VOICE-ARCHITECTURE.md).
+
 ## Payments Stack
 
 Stripe provides:

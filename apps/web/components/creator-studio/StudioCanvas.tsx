@@ -4,6 +4,7 @@ import { AppearanceStudio } from './appearance/AppearanceStudio';
 import { sectionPlaceholderContent } from './config';
 import { IdentityEditor } from './IdentityEditor';
 import { PersonalityEditor } from './PersonalityEditor';
+import { VoiceEditor } from './VoiceEditor';
 import type { CompanionDraft, StudioSectionId } from './types';
 
 type StudioCanvasProps = {
@@ -48,6 +49,13 @@ export function StudioCanvas({ activeSection, companion, onCompanionChange }: St
           <PersonalityEditor
             personality={companion.personality}
             onChange={(personality) => onCompanionChange({ ...companion, personality })}
+          />
+        ) : activeSection === 'voice' ? (
+          <VoiceEditor
+            characterName={companion.name}
+            greeting={companion.greeting}
+            voice={companion.voice}
+            onChange={(voice) => onCompanionChange({ ...companion, voice })}
           />
         ) : (
           <GenericCanvasPlaceholder sectionTitle={content.title} />
