@@ -9,10 +9,7 @@ import {
   Volume2,
 } from 'lucide-react';
 
-import type {
-  CompanionDraft,
-  StudioSection,
-} from './types';
+import type { CompanionDraft, StudioSection } from './types';
 
 export const studioSections: StudioSection[] = [
   {
@@ -69,8 +66,7 @@ export const studioSections: StudioSection[] = [
 export const defaultCompanionDraft: CompanionDraft = {
   name: 'New Companion',
   tagline: 'An original Aphrodite companion',
-  greeting:
-    "Hi. I'm excited to meet you and begin creating something meaningful together.",
+  greeting: "Hi. I'm excited to meet you and begin creating something meaningful together.",
   category: 'Friendly',
   traits: ['Warm', 'Curious', 'Creative'],
 };
@@ -79,8 +75,7 @@ export const sectionPlaceholderContent = {
   identity: {
     eyebrow: 'Character foundation',
     title: 'Define their identity',
-    description:
-      'Shape the essential details that make this companion recognizable and distinct.',
+    description: 'Shape the essential details that make this companion recognizable and distinct.',
     icon: UserRound,
   },
   appearance: {
@@ -100,8 +95,7 @@ export const sectionPlaceholderContent = {
   voice: {
     eyebrow: 'Voice design',
     title: 'Choose how they sound',
-    description:
-      'Select a voice provider, tune delivery, and preview the companion speaking.',
+    description: 'Select a voice provider, tune delivery, and preview the companion speaking.',
     icon: Volume2,
   },
   knowledge: {
@@ -121,8 +115,7 @@ export const sectionPlaceholderContent = {
   publish: {
     eyebrow: 'Release workflow',
     title: 'Prepare to publish',
-    description:
-      'Review the companion, configure visibility, and prepare distribution settings.',
+    description: 'Review the companion, configure visibility, and prepare distribution settings.',
     icon: Send,
   },
 } as const;

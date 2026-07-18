@@ -1,8 +1,4 @@
-import {
-  MessageCircle,
-  MoreHorizontal,
-  Sparkles,
-} from 'lucide-react';
+import { MessageCircle, MoreHorizontal, Sparkles } from 'lucide-react';
 
 import type { CompanionDraft } from './types';
 
@@ -10,9 +6,7 @@ type StudioPreviewProps = {
   companion: CompanionDraft;
 };
 
-export function StudioPreview({
-  companion,
-}: StudioPreviewProps) {
+export function StudioPreview({ companion }: StudioPreviewProps) {
   return (
     <aside className="border-t border-white/[0.08] bg-[#0d0a12] p-5 lg:border-l lg:border-t-0 xl:p-6">
       <div className="flex items-center justify-between">
@@ -21,9 +15,7 @@ export function StudioPreview({
             Live Preview
           </p>
 
-          <p className="mt-1 text-sm text-white/50">
-            Companion profile
-          </p>
+          <p className="mt-1 text-sm text-white/50">Companion profile</p>
         </div>
 
         <button
@@ -53,13 +45,9 @@ export function StudioPreview({
         </div>
 
         <div className="p-5">
-          <h2 className="text-2xl font-semibold tracking-[-0.04em] text-white">
-            {companion.name}
-          </h2>
+          <h2 className="text-2xl font-semibold tracking-[-0.04em] text-white">{companion.name}</h2>
 
-          <p className="mt-1 text-sm text-fuchsia-100/55">
-            {companion.tagline}
-          </p>
+          <p className="mt-1 text-sm text-fuchsia-100/55">{companion.tagline}</p>
 
           <div className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">
@@ -67,16 +55,14 @@ export function StudioPreview({
               Greeting
             </div>
 
-            <p className="mt-3 text-sm leading-6 text-white/60">
-              “{companion.greeting}”
-            </p>
+            <p className="mt-3 text-sm leading-6 text-white/60">“{companion.greeting}”</p>
           </div>
 
           <div className="mt-5 flex flex-wrap gap-2">
             {companion.traits.map((trait) => (
               <span
                 key={trait}
-                className="rounded-full border border-fuchsia-200/12 bg-fuchsia-300/[0.055] px-3 py-1.5 text-xs text-fuchsia-100/65"
+                className="border-fuchsia-200/12 rounded-full border bg-fuchsia-300/[0.055] px-3 py-1.5 text-xs text-fuchsia-100/65"
               >
                 {trait}
               </span>

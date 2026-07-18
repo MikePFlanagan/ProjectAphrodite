@@ -1,13 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 
 export type StudioSectionId =
-  | 'identity'
-  | 'appearance'
-  | 'personality'
-  | 'voice'
-  | 'knowledge'
-  | 'gallery'
-  | 'publish';
+  'identity' | 'appearance' | 'personality' | 'voice' | 'knowledge' | 'gallery' | 'publish';
 
 export type StudioSection = {
   id: StudioSectionId;

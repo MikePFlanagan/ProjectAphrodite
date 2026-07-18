@@ -1,20 +1,12 @@
-import {
-  Check,
-  Eye,
-  MoreHorizontal,
-  Save,
-  Sparkles,
-} from 'lucide-react';
+import { Check, Eye, MoreHorizontal, Save, Sparkles } from 'lucide-react';
 
 type StudioHeaderProps = {
   companionName: string;
 };
 
-export function StudioHeader({
-  companionName,
-}: StudioHeaderProps) {
+export function StudioHeader({ companionName }: StudioHeaderProps) {
   return (
-    <header className="flex flex-col gap-5 border-b border-white/[0.08] bg-[#0c0910]/88 px-5 py-5 backdrop-blur-xl sm:px-7 lg:flex-row lg:items-center lg:justify-between">
+    <header className="bg-[#0c0910]/88 flex flex-col gap-5 border-b border-white/[0.08] px-5 py-5 backdrop-blur-xl sm:px-7 lg:flex-row lg:items-center lg:justify-between">
       <div className="min-w-0">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-fuchsia-200/60">
           <Sparkles className="size-3.5" />
