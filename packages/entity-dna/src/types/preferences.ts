@@ -1,3 +1,3 @@
 export interface Preferences {
-    _placeholder?: never;
-} 
+  _placeholder?: never;
+}

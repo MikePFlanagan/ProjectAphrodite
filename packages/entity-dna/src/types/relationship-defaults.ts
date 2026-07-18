@@ -1,3 +1,3 @@
 export interface RelationshipDefaults {
-    _placeholder?: never;
+  _placeholder?: never;
 }

@@ -1,3 +1,3 @@
 export interface Personality {
-    _placeholder?: never;
+  _placeholder?: never;
 }

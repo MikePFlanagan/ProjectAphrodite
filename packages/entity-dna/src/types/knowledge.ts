@@ -1,3 +1,3 @@
-export interface Knowledge {    
-    _placeholder?: never;
+export interface Knowledge {
+  _placeholder?: never;
 }

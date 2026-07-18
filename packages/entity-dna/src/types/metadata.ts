@@ -1,3 +1,3 @@
 export interface Metadata {
-    _placeholder?: never;
+  _placeholder?: never;
 }

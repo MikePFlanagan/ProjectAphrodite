@@ -1,3 +1,3 @@
 export interface EmotionalProfile {
-    _placeholder?: never;
+  _placeholder?: never;
 }

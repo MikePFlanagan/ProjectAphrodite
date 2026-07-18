@@ -1,3 +1,3 @@
 export interface Communication {
-    _placeholder?: never;
+  _placeholder?: never;
 }

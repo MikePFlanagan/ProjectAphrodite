@@ -1,3 +1,3 @@
-export interface Boundaries {   
-    _placeholder?: never;
+export interface Boundaries {
+  _placeholder?: never;
 }
