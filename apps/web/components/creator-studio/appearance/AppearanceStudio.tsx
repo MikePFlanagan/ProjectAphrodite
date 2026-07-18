@@ -12,7 +12,7 @@ import { characterLocks } from './config';
 import { generateMockPreview, type MockGenerationResult } from './providers/MockImageProvider';
 import type { AppearanceAssetType, CharacterLock } from './types';
 
-export function AppearanceStudio() {
+export function AppearanceStudio({ draftId }: { draftId?: string }) {
   const [assetType, setAssetType] = useState<AppearanceAssetType>('portrait');
   const [promptValues, setPromptValues] = useState<Record<string, string>>({});
   const [locks, setLocks] = useState<CharacterLock[]>(characterLocks);
@@ -26,8 +26,9 @@ export function AppearanceStudio() {
     let active = true;
 
     async function loadHistory() {
+      if (!draftId) return;
       try {
-        const response = await fetch('/api/creator/assets');
+        const response = await fetch(`/api/creator/assets?draftId=${encodeURIComponent(draftId)}`);
         if (!response.ok) throw new Error('Could not load saved assets.');
         const data = (await response.json()) as { assets: MockGenerationResult[] };
         if (!active) return;
@@ -47,7 +48,7 @@ export function AppearanceStudio() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [draftId]);
 
   function updatePrompt(field: string, value: string) {
     setPromptValues((current) => ({ ...current, [field]: value }));
@@ -59,11 +60,12 @@ export function AppearanceStudio() {
     );
   }
 
-  const canGenerate = Object.values(promptValues).some((value) => value.trim().length > 0);
+  const canGenerate =
+    Boolean(draftId) && Object.values(promptValues).some((value) => value.trim().length > 0);
   const selectedResult = results.find((result) => result.id === selectedId) ?? null;
 
   async function handleGenerate() {
-    if (!canGenerate || isGenerating) return;
+    if (!draftId || !canGenerate || isGenerating) return;
 
     setIsGenerating(true);
     try {
@@ -76,7 +78,7 @@ export function AppearanceStudio() {
       const response = await fetch('/api/creator/assets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nextResult),
+        body: JSON.stringify({ ...nextResult, draftId }),
       });
       if (!response.ok) throw new Error('Could not save generated asset.');
       const data = (await response.json()) as { asset: MockGenerationResult };

@@ -64,19 +64,21 @@ model User {
 }
 
 model CreatorAsset {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   userId       String
+  characterId  String?
   assetType    String
-  prompt       String   @db.Text
+  prompt       String     @db.Text
   promptValues Json
   locks        Json
   variation    Int
   palette      Json
-  provider     String   @default("mock")
-  createdAt    DateTime @default(now())
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider     String     @default("mock")
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character    Character? @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
-  @@index([userId, createdAt])
+  @@index([userId, characterId, createdAt])
 }
 
 model Account {
@@ -132,6 +134,7 @@ model Character {
   conversations     Conversation[]
   favorites         Favorite[]
   memories          Memory[]
+  creatorAssets     CreatorAsset[]
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
