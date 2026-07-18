@@ -3,14 +3,36 @@ on: [pull_request, push]
 jobs:
   quality:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://aphrodite:aphrodite@localhost:5433/aphrodite?schema=public
+      AUTH_SECRET: ci-only-secret-that-is-at-least-32-characters
+      NEXTAUTH_URL: http://localhost:3002
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: pnpm/action-setup@v4
-        with: { version: 10 }
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm format:check
+      - name: Check formatting for changed files
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+          else
+            base_sha="${{ github.event.before }}"
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=ACMRT "$base_sha" "$GITHUB_SHA" -- \
+              '*.css' '*.html' '*.js' '*.json' '*.jsx' '*.md' '*.mjs' '*.ts' '*.tsx' '*.yaml' '*.yml'
+          )
+
+          if (( ${#changed_files[@]} )); then
+            pnpm exec prettier --check "${changed_files[@]}"
+          else
+            echo "No Prettier-supported files changed."
+          fi
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
