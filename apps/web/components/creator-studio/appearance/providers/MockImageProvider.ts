@@ -4,6 +4,7 @@ export type MockGenerationRequest = {
   assetType: AppearanceAssetType;
   promptValues: Record<string, string>;
   locks: CharacterLock[];
+  variation: number;
 };
 
 export type MockGenerationResult = MockGenerationRequest & {
@@ -29,7 +30,7 @@ export async function generateMockPreview(
     .map((value) => value.trim())
     .filter(Boolean)
     .join(', ');
-  const seed = `${request.assetType}:${prompt}:${request.locks
+  const seed = `${request.assetType}:${prompt}:${request.variation}:${request.locks
     .filter((lock) => lock.enabled)
     .map((lock) => lock.id)
     .join(',')}`;

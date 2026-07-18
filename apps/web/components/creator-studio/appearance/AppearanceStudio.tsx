@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { AssetTypePicker } from './AssetTypePicker';
 import { CharacterLockPanel } from './CharacterLock';
 import { GenerationPreview } from './GenerationPreview';
+import { GenerationHistory } from './GenerationHistory';
 import { PromptBuilder } from './PromptBuilder';
 import { ReferenceLibrary } from './ReferenceLibrary';
 import { characterLocks } from './config';
@@ -15,7 +16,8 @@ export function AppearanceStudio() {
   const [assetType, setAssetType] = useState<AppearanceAssetType>('portrait');
   const [promptValues, setPromptValues] = useState<Record<string, string>>({});
   const [locks, setLocks] = useState<CharacterLock[]>(characterLocks);
-  const [result, setResult] = useState<MockGenerationResult | null>(null);
+  const [results, setResults] = useState<MockGenerationResult[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   function updatePrompt(field: string, value: string) {
@@ -29,13 +31,21 @@ export function AppearanceStudio() {
   }
 
   const canGenerate = Object.values(promptValues).some((value) => value.trim().length > 0);
+  const selectedResult = results.find((result) => result.id === selectedId) ?? null;
 
   async function handleGenerate() {
     if (!canGenerate || isGenerating) return;
 
     setIsGenerating(true);
     try {
-      setResult(await generateMockPreview({ assetType, promptValues, locks }));
+      const nextResult = await generateMockPreview({
+        assetType,
+        promptValues,
+        locks,
+        variation: results.length + 1,
+      });
+      setResults((current) => [nextResult, ...current]);
+      setSelectedId(nextResult.id);
     } finally {
       setIsGenerating(false);
     }
@@ -48,10 +58,15 @@ export function AppearanceStudio() {
         <div className="min-w-0 space-y-6">
           <PromptBuilder values={promptValues} onChange={updatePrompt} />
           <ReferenceLibrary />
+          <GenerationHistory
+            results={results}
+            selectedId={selectedId}
+            onSelect={(result) => setSelectedId(result.id)}
+          />
         </div>
         <aside className="min-w-0 space-y-6">
           <GenerationPreview
-            result={result}
+            result={selectedResult}
             isGenerating={isGenerating}
             canGenerate={canGenerate}
             onGenerate={handleGenerate}

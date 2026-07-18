@@ -40,6 +40,11 @@ export function GenerationPreview({
             {result.assetType.replace('-', ' ')}
           </span>
         ) : null}
+        {result ? (
+          <span className="absolute right-4 top-4 rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-[10px] font-semibold text-white/65 backdrop-blur-xl">
+            V{result.variation}
+          </span>
+        ) : null}
       </div>
 
       <div className="p-5">
