@@ -1,13 +1,16 @@
-import { ArrowRight, Construction, Sparkles } from 'lucide-react';
+import { ArrowRight, Construction } from 'lucide-react';
 
 import { sectionPlaceholderContent } from './config';
-import type { StudioSectionId } from './types';
+import { IdentityEditor } from './IdentityEditor';
+import type { CompanionDraft, StudioSectionId } from './types';
 
 type StudioCanvasProps = {
   activeSection: StudioSectionId;
+  companion: CompanionDraft;
+  onCompanionChange: (companion: CompanionDraft) => void;
 };
 
-export function StudioCanvas({ activeSection }: StudioCanvasProps) {
+export function StudioCanvas({ activeSection, companion, onCompanionChange }: StudioCanvasProps) {
   const content = sectionPlaceholderContent[activeSection];
 
   const Icon = content.icon;
@@ -34,7 +37,7 @@ export function StudioCanvas({ activeSection }: StudioCanvasProps) {
         </div>
 
         {activeSection === 'identity' ? (
-          <IdentityCanvasPlaceholder />
+          <IdentityEditor companion={companion} onChange={onCompanionChange} />
         ) : activeSection === 'appearance' ? (
           <AppearanceCanvasPlaceholder />
         ) : (
@@ -42,43 +45,6 @@ export function StudioCanvas({ activeSection }: StudioCanvasProps) {
         )}
       </section>
     </main>
-  );
-}
-
-function IdentityCanvasPlaceholder() {
-  return (
-    <div className="mt-8 space-y-5">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <PlaceholderField label="Character name" value="New Companion" />
-
-        <PlaceholderField label="Category" value="Friendly" />
-      </div>
-
-      <PlaceholderField label="Tagline" value="An original Aphrodite companion" />
-
-      <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.025] p-5">
-        <p className="text-xs font-medium text-white/55">Description</p>
-
-        <div className="text-white/32 mt-3 min-h-28 rounded-xl border border-white/[0.08] bg-black/15 p-4 text-sm leading-6">
-          Tell creators and users what makes this companion distinct.
-        </div>
-      </div>
-
-      <div className="rounded-[22px] border border-dashed border-fuchsia-200/15 bg-fuchsia-300/[0.035] p-5">
-        <div className="flex items-start gap-3">
-          <Sparkles className="mt-0.5 size-4 shrink-0 text-fuchsia-200" />
-
-          <div>
-            <p className="text-sm font-medium text-white">Identity editor comes next</p>
-
-            <p className="mt-1 text-xs leading-5 text-white/35">
-              The next milestone turns these placeholders into live fields connected to the
-              companion preview.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -123,18 +89,6 @@ function GenericCanvasPlaceholder({ sectionTitle }: { sectionTitle: string }) {
           The Creator Studio shell is ready. This specialized editor will plug into the canvas in a
           later milestone.
         </p>
-      </div>
-    </div>
-  );
-}
-
-function PlaceholderField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.025] p-5">
-      <p className="text-xs font-medium text-white/55">{label}</p>
-
-      <div className="mt-3 rounded-xl border border-white/[0.08] bg-black/15 px-4 py-3 text-sm text-white/50">
-        {value}
       </div>
     </div>
   );
