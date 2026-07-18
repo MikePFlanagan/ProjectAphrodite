@@ -59,6 +59,7 @@ model User {
   memories          Memory[]
   subscription      Subscription?
   creatorAssets     CreatorAsset[]
+  chatUsage         ChatUsage[]
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 }
@@ -144,19 +145,37 @@ model Character {
 }
 
 model Conversation {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   userId        String
   characterId   String
   title         String?
-  lastMessageAt DateTime  @default(now())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  character     Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  lastMessageAt DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character     Character   @relation(fields: [characterId], references: [id], onDelete: Cascade)
   messages      Message[]
+  usage         ChatUsage[]
 
   @@index([userId, lastMessageAt])
   @@index([characterId])
+}
+
+model ChatUsage {
+  id                  String       @id @default(cuid())
+  userId              String
+  conversationId      String
+  model               String
+  inputTokens         Int
+  outputTokens        Int
+  totalTokens         Int
+  estimatedCostMicros Int?
+  createdAt           DateTime     @default(now())
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation        Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([conversationId, createdAt])
 }
 
 model Message {

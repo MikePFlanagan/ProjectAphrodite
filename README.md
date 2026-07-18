@@ -53,6 +53,9 @@ Required for local database and Auth.js startup:
 Required when enabling AI generation:
 
 - `OPENAI_API_KEY` — server-only; do not expose with a `NEXT_PUBLIC_` prefix.
+- `OPENAI_MODEL` — defaults to `gpt-5-mini`.
+- `CHAT_DAILY_LIMIT_FREE`, `CHAT_DAILY_LIMIT_PREMIUM`, and `CHAT_DAILY_LIMIT_CREATOR` — optional UTC daily message allowances.
+- `OPENAI_INPUT_COST_PER_MILLION` and `OPENAI_OUTPUT_COST_PER_MILLION` — optional USD rates used to estimate per-response cost telemetry.
 
 Required when billing routes are implemented:
 
@@ -65,8 +68,8 @@ Required when billing routes are implemented:
 - Public: `/`, `/login`, `/signup`
 - Protected: `/dashboard`, `/explore`, `/favorites`, `/settings`, `/characters/[slug]`, and `/chat/[conversationId]`
 
-Character and conversation access is enforced in server components/actions; URL changes cannot expose another member's conversation. The chat composer is intentionally disabled until the live AI milestone.
+Character and conversation access is enforced in server components/actions; URL changes cannot expose another member's conversation. Live chat streams character-specific responses, persists both sides of the conversation, enforces plan-aware daily limits, and records token usage per conversation.
 
 ## Deliberate next steps
 
-Add email/OAuth providers, live AI streaming with safety controls, conversation-memory extraction, and Stripe checkout/webhooks. Keep those features behind server-side authorization and audit logging.
+Add email/OAuth providers, deeper safety controls, conversation-memory extraction, and Stripe checkout/webhooks. Keep those features behind server-side authorization and audit logging.
