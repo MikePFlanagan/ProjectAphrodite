@@ -24,7 +24,8 @@
     "docker:m1:up": "DOCKER_DEFAULT_PLATFORM=linux/arm64 docker compose -f docker/compose.yml -f docker/compose.m1.yml up -d",
     "docker:m1:down": "docker compose -f docker/compose.yml -f docker/compose.m1.yml down",
     "dev:start": "./scripts/dev-start.sh",
-    "dev:stop": "./scripts/dev-stop.sh"
+    "dev:stop": "./scripts/dev-stop.sh",
+    "founder": "node scripts/founder.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
