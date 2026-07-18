@@ -14,6 +14,7 @@
     "@aphrodite/ai": "workspace:*",
     "@aphrodite/auth": "workspace:*",
     "@aphrodite/database": "workspace:*",
+    "@aphrodite/entity-dna": "workspace:*",
     "@aphrodite/ui": "workspace:*",
     "@auth/prisma-adapter": "^2.7.0",
     "ai": "^5.0.212",

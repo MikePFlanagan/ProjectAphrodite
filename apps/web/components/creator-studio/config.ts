@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import type { CompanionDraft, StudioSection } from './types';
+import { defaultPersonality } from '@aphrodite/entity-dna';
 
 export const studioSections: StudioSection[] = [
   {
@@ -31,7 +32,7 @@ export const studioSections: StudioSection[] = [
     title: 'Personality',
     description: 'Traits, behavior, and conversation style',
     icon: SlidersHorizontal,
-    completed: false,
+    completed: true,
   },
   {
     id: 'voice',
@@ -71,6 +72,7 @@ export const defaultCompanionDraft: CompanionDraft = {
   greeting: "Hi. I'm excited to meet you and begin creating something meaningful together.",
   category: 'FRIENDLY',
   traits: ['Warm', 'Curious', 'Creative'],
+  personality: defaultPersonality,
 };
 
 export const sectionPlaceholderContent = {

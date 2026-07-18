@@ -125,6 +125,7 @@ model Character {
   coverUrl          String?
   personalityPrompt String            @db.Text
   traits            String[]          @default([])
+  personality       Json              @default("{}")
   greeting          String            @db.Text
   category          CharacterCategory
   isFeatured        Boolean           @default(false)

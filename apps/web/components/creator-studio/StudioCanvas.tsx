@@ -3,6 +3,7 @@ import { Construction } from 'lucide-react';
 import { AppearanceStudio } from './appearance/AppearanceStudio';
 import { sectionPlaceholderContent } from './config';
 import { IdentityEditor } from './IdentityEditor';
+import { PersonalityEditor } from './PersonalityEditor';
 import type { CompanionDraft, StudioSectionId } from './types';
 
 type StudioCanvasProps = {
@@ -43,6 +44,11 @@ export function StudioCanvas({ activeSection, companion, onCompanionChange }: St
           <IdentityEditor companion={companion} onChange={onCompanionChange} />
         ) : activeSection === 'appearance' ? (
           <AppearanceStudio draftId={companion.id} />
+        ) : activeSection === 'personality' ? (
+          <PersonalityEditor
+            personality={companion.personality}
+            onChange={(personality) => onCompanionChange({ ...companion, personality })}
+          />
         ) : (
           <GenericCanvasPlaceholder sectionTitle={content.title} />
         )}
