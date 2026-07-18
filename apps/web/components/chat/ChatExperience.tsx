@@ -102,6 +102,7 @@ export function ChatExperience({
         throw new Error(responseBody?.error ?? 'Unable to generate a response.');
       }
 
+      messagePersisted = response.headers.get('X-Message-Persisted') === 'true';
       const limit = Number(response.headers.get('X-Chat-Limit'));
       const remaining = Number(response.headers.get('X-Chat-Remaining'));
       const resetsAt = response.headers.get('X-Chat-Resets-At');
@@ -164,7 +165,13 @@ export function ChatExperience({
 
       if (!messagePersisted) setContent(trimmedContent);
 
-      setError(caughtError instanceof Error ? caughtError.message : 'Something went wrong.');
+      setError(
+        messagePersisted
+          ? `${characterName}'s response was interrupted. Your message is saved; please try again.`
+          : caughtError instanceof Error
+            ? caughtError.message
+            : 'Something went wrong.',
+      );
     } finally {
       setIsStreaming(false);
       textareaRef.current?.focus();
