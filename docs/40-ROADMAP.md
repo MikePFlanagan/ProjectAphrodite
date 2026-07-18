@@ -104,7 +104,7 @@ Status: Implementation Complete — Stripe Test Configuration Required
 
 ## Version 0.5 Alpha — Retention
 
-Status: Next
+Status: In progress
 
 ### Goals
 
@@ -115,6 +115,14 @@ Status: Next
 - Personalized recommendations
 - Relationship or engagement progression
 - Notification strategy
+
+### Shipped foundations
+
+- Rolling conversation summaries and character-scoped durable memories
+- Explicit sensitive-data exclusions and model-usage telemetry
+- Searchable private conversation history with recent-message previews
+- User-created memories plus correction, importance, and forget controls
+- User-managed and forgotten memories protected from automatic re-extraction, with stale summaries cleared
 
 ## Version 0.6 Alpha — Creator Studio
 

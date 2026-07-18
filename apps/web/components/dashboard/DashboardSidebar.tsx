@@ -8,6 +8,7 @@ import {
   Heart,
   LayoutDashboard,
   MessageCirclePlus,
+  MessagesSquare,
   Settings,
   Sparkles,
   Stars,
@@ -18,6 +19,11 @@ const navigation = [
     href: '/dashboard',
     label: 'Dashboard',
     icon: LayoutDashboard,
+  },
+  {
+    href: '/conversations',
+    label: 'Conversations',
+    icon: MessagesSquare,
   },
   {
     href: '/explore',
@@ -52,21 +58,14 @@ export function DashboardSidebar() {
   return (
     <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-white/[0.08] bg-[#0d0a12] lg:flex">
       <div className="flex h-20 items-center border-b border-white/[0.08] px-5">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-3"
-        >
+        <Link href="/dashboard" className="flex items-center gap-3">
           <span className="grid size-10 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-400 via-violet-500 to-indigo-500 shadow-[0_0_30px_rgba(217,70,239,0.22)]">
             <Sparkles className="size-5 text-white" />
           </span>
 
           <div>
-            <p className="font-semibold tracking-tight text-white">
-              Aphrodite
-            </p>
-            <p className="text-xs text-white/35">
-              AI companion workspace
-            </p>
+            <p className="font-semibold tracking-tight text-white">Aphrodite</p>
+            <p className="text-xs text-white/35">AI companion workspace</p>
           </div>
         </Link>
       </div>
@@ -87,9 +86,7 @@ export function DashboardSidebar() {
 
           {navigation.map((item) => {
             const Icon = item.icon;
-            const active =
-              pathname === item.href ||
-              pathname.startsWith(`${item.href}/`);
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
               <Link
@@ -128,7 +125,7 @@ export function DashboardSidebar() {
             </p>
 
             <Link
-              href="/dashboard"
+              href="/conversations"
               className="text-xs text-fuchsia-200/60 transition hover:text-fuchsia-100"
             >
               View all
@@ -136,9 +133,7 @@ export function DashboardSidebar() {
           </div>
 
           <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4">
-            <p className="text-sm text-white/45">
-              Your conversations will appear here.
-            </p>
+            <p className="text-sm text-white/45">Your conversations will appear here.</p>
           </div>
         </div>
       </div>
@@ -147,9 +142,7 @@ export function DashboardSidebar() {
         <div className="rounded-2xl border border-fuchsia-200/15 bg-gradient-to-br from-fuchsia-300/[0.09] to-violet-400/[0.04] p-4">
           <div className="flex items-center gap-2">
             <Sparkles className="size-4 text-fuchsia-200" />
-            <p className="text-sm font-medium text-white">
-              Free plan
-            </p>
+            <p className="text-sm font-medium text-white">Free plan</p>
           </div>
 
           <p className="mt-2 text-xs leading-5 text-white/40">
