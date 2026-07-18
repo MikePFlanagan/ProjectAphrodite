@@ -39,7 +39,7 @@ export const studioSections: StudioSection[] = [
     title: 'Voice',
     description: 'Voice model, tone, and delivery',
     icon: Volume2,
-    completed: false,
+    completed: true,
   },
   {
     id: 'knowledge',
@@ -73,6 +73,12 @@ export const defaultCompanionDraft: CompanionDraft = {
   category: 'FRIENDLY',
   traits: ['Warm', 'Curious', 'Creative'],
   personality: defaultPersonality,
+  voice: {
+    provider: 'browser',
+    voiceId: '',
+    rate: 1,
+    pitch: 1,
+  },
 };
 
 export const sectionPlaceholderContent = {

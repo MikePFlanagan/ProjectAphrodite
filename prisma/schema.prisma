@@ -127,6 +127,10 @@ model Character {
   personalityPrompt String            @db.Text
   traits            String[]          @default([])
   personality       Json              @default("{}")
+  voiceProvider     String            @default("browser")
+  voiceId           String            @default("")
+  voiceRate         Float             @default(1)
+  voicePitch        Float             @default(1)
   greeting          String            @db.Text
   category          CharacterCategory
   isFeatured        Boolean           @default(false)

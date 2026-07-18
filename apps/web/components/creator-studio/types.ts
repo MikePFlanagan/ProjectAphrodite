@@ -22,6 +22,16 @@ export type CompanionDraft = {
   category: string;
   traits: string[];
   personality: Personality;
+  voice: VoiceProfile;
+};
+
+export type VoiceProvider = 'browser' | 'local' | 'telnyx';
+
+export type VoiceProfile = {
+  provider: VoiceProvider;
+  voiceId: string;
+  rate: number;
+  pitch: number;
 };
 
 export type DraftSaveStatus = 'loading' | 'saving' | 'saved' | 'error';

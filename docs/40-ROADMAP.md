@@ -143,6 +143,14 @@ Status: Planned
 - Media moderation
 - Storage integration
 
+### Shipped foundations
+
+- Provider-neutral per-character voice profiles
+- No-key device voice preview in Creator Studio
+- Local-first voice architecture with optional managed-provider fallback
+
+See [Voice Architecture](./03-VOICE-ARCHITECTURE.md) for the current boundary and the self-hosted production path.
+
 ## Version 0.8 Beta — Marketplace
 
 Status: Planned

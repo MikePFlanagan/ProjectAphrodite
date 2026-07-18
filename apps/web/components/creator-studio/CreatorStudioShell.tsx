@@ -107,5 +107,6 @@ function serializeDraft(draft: CompanionDraft) {
     category: draft.category,
     traits: draft.traits,
     personality: draft.personality,
+    voice: draft.voice,
   });
 }

@@ -38,6 +38,12 @@ const draftSchema = z.object({
     conversationStyle: z.enum(['supportive', 'playful', 'direct', 'reflective']),
     instructions: z.string().trim().max(2000),
   }),
+  voice: z.object({
+    provider: z.enum(['browser', 'local', 'telnyx']),
+    voiceId: z.string().max(500),
+    rate: z.number().min(0.5).max(2),
+    pitch: z.number().min(0.5).max(2),
+  }),
 });
 
 const defaultDraft = {
@@ -48,6 +54,12 @@ const defaultDraft = {
   category: 'FRIENDLY' as const,
   traits: ['Warm', 'Curious', 'Creative'],
   personality: defaultPersonality,
+  voice: {
+    provider: 'browser' as const,
+    voiceId: '',
+    rate: 1,
+    pitch: 1,
+  },
 };
 
 export async function GET() {
@@ -81,6 +93,10 @@ export async function GET() {
         slug: `draft-${session.user.id}-${Date.now()}`,
         avatarUrl: '',
         personalityPrompt: buildPersonalityPrompt(defaultDraft.traits, defaultDraft.personality),
+        voiceProvider: defaultDraft.voice.provider,
+        voiceId: defaultDraft.voice.voiceId,
+        voiceRate: defaultDraft.voice.rate,
+        voicePitch: defaultDraft.voice.pitch,
         creatorId: session.user.id,
       },
     });
@@ -110,10 +126,15 @@ export async function PATCH(request: Request) {
   if (slugOwner)
     return NextResponse.json({ error: 'That URL slug is already in use.' }, { status: 409 });
 
+  const { voice, ...characterFields } = parsed.data;
   const updated = await db.character.update({
     where: { id: draft.id },
     data: {
-      ...parsed.data,
+      ...characterFields,
+      voiceProvider: voice.provider,
+      voiceId: voice.voiceId,
+      voiceRate: voice.rate,
+      voicePitch: voice.pitch,
       personalityPrompt: buildPersonalityPrompt(parsed.data.traits, parsed.data.personality),
     },
   });
@@ -131,6 +152,10 @@ function toDraftResponse(draft: {
   category: string;
   traits: string[];
   personality: unknown;
+  voiceProvider: string;
+  voiceId: string;
+  voiceRate: number;
+  voicePitch: number;
 }) {
   return {
     id: draft.id,
@@ -142,7 +167,17 @@ function toDraftResponse(draft: {
     category: draft.category,
     traits: draft.traits,
     personality: normalizePersonality(draft.personality),
+    voice: {
+      provider: normalizeVoiceProvider(draft.voiceProvider),
+      voiceId: draft.voiceId,
+      rate: draft.voiceRate,
+      pitch: draft.voicePitch,
+    },
   };
+}
+
+function normalizeVoiceProvider(value: string): 'browser' | 'local' | 'telnyx' {
+  return value === 'local' || value === 'telnyx' ? value : 'browser';
 }
 
 function normalizePersonality(value: unknown): Personality {
