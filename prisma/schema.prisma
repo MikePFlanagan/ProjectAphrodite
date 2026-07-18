@@ -145,17 +145,19 @@ model Character {
 }
 
 model Conversation {
-  id            String      @id @default(cuid())
-  userId        String
-  characterId   String
-  title         String?
-  lastMessageAt DateTime    @default(now())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  character     Character   @relation(fields: [characterId], references: [id], onDelete: Cascade)
-  messages      Message[]
-  usage         ChatUsage[]
+  id               String      @id @default(cuid())
+  userId           String
+  characterId      String
+  title            String?
+  summary          String?     @db.Text
+  summaryUpdatedAt DateTime?
+  lastMessageAt    DateTime    @default(now())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character        Character   @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  messages         Message[]
+  usage            ChatUsage[]
 
   @@index([userId, lastMessageAt])
   @@index([characterId])
@@ -212,7 +214,8 @@ model Memory {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
 
-  @@index([userId, characterId])
+  @@unique([userId, characterId, key])
+  @@index([userId, characterId, importance, updatedAt])
 }
 
 model Subscription {

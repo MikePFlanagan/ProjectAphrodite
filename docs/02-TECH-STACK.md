@@ -157,7 +157,8 @@ The planned implementation includes:
 - Conversation context
 - Usage tracking
 - Moderation controls
-- Future memory retrieval
+- Character-scoped durable memory retrieval
+- Rolling conversation summaries
 
 The initial implementation should use one provider before introducing multi-provider complexity.
 

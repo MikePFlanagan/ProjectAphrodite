@@ -205,7 +205,6 @@ The current application does not yet include:
 
 - Production logging
 - Automated end-to-end tests
-- Long-term memory extraction
 - Creator publishing workflows
 
 ## Planned Architecture Evolution
