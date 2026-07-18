@@ -245,6 +245,7 @@ packages/ai/
 - Keep secrets exclusively on the server.
 - Avoid unnecessary client-side data fetching.
 - Keep shared packages focused and small.
+- Treat user memory corrections and forget requests as authoritative over model extraction.
 - Preserve deployability after every milestone.
 - Introduce abstraction only when there is a real use case.
 - Avoid premature distributed-system complexity.

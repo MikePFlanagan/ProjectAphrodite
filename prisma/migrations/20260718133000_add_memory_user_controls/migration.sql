@@ -1,0 +1,3 @@
+ALTER TABLE "Memory"
+ADD COLUMN "isUserManaged" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN "isForgotten" BOOLEAN NOT NULL DEFAULT false;

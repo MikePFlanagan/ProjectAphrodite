@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { MemoryManager } from '@/components/settings/MemoryManager';
 import { requireUser } from '@/lib/require-auth';
 
 export default async function SettingsPage() {
@@ -22,6 +23,7 @@ export default async function SettingsPage() {
           </div>
         </dl>
       </section>
+      <MemoryManager />
       <section
         id="billing"
         className="mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5"

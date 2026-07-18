@@ -37,6 +37,7 @@ export default async function DashboardPage() {
       },
       include: {
         character: true,
+        messages: { orderBy: { createdAt: 'desc' }, take: 1 },
       },
       orderBy: {
         lastMessageAt: 'desc',
@@ -96,7 +97,11 @@ export default async function DashboardPage() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div>
-          <SectionHeading eyebrow="RECENT ACTIVITY" title="Continue chatting" href="/explore" />
+          <SectionHeading
+            eyebrow="RECENT ACTIVITY"
+            title="Continue chatting"
+            href="/conversations"
+          />
 
           <div className="mt-5">
             {conversations.length ? (
@@ -118,7 +123,7 @@ export default async function DashboardPage() {
                     <p className="mt-5 font-medium text-white">{conversation.character.name}</p>
 
                     <p className="text-white/42 mt-2 line-clamp-2 text-sm leading-6">
-                      {conversation.character.greeting}
+                      {conversation.messages[0]?.content ?? conversation.character.greeting}
                     </p>
 
                     <div className="mt-5 flex items-center gap-2 text-xs text-fuchsia-200/60">

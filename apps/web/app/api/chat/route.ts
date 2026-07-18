@@ -59,7 +59,7 @@ export async function POST(request: Request) {
         character: {
           include: {
             memories: {
-              where: { userId: session.user.id },
+              where: { userId: session.user.id, isForgotten: false },
               orderBy: [{ importance: 'desc' }, { updatedAt: 'desc' }],
               take: 12,
             },

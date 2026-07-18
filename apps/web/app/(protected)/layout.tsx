@@ -1,4 +1,5 @@
 import { Search, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { MobileDashboardNav } from '@/components/dashboard/MobileDashboardNav';
@@ -30,24 +31,19 @@ export default async function ProtectedLayout({
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              type="button"
+            <Link
+              href="/conversations"
               aria-label="Search"
               className="hidden size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-white/45 transition hover:border-white/20 hover:bg-white/[0.07] hover:text-white sm:grid"
             >
               <Search className="size-4" />
-            </button>
+            </Link>
 
-            <UserMenu
-              name={user.name ?? 'Member'}
-              email={user.email}
-            />
+            <UserMenu name={user.name ?? 'Member'} email={user.email} />
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-[1440px] p-5 sm:p-8 lg:p-10">
-          {children}
-        </main>
+        <main className="mx-auto w-full max-w-[1440px] p-5 sm:p-8 lg:p-10">{children}</main>
       </div>
 
       <MobileDashboardNav />
