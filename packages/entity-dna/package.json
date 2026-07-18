@@ -9,7 +9,8 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit",
+  "verify": "pnpm lint && pnpm typecheck && pnpm build"
   },
   "devDependencies": {
     "@aphrodite/config": "workspace:*",
