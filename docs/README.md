@@ -9,14 +9,21 @@ These documents describe the current product, engineering architecture, technica
 ## Documentation Index
 
 ### Product
+
 - [Vision](./00-VISION.md)
 
 ### Engineering
+
 - [Architecture](./01-ARCHITECTURE.md)
 - [Technology Stack](./02-TECH-STACK.md)
 - [Project Structure](./03-PROJECT-STRUCTURE.md)
 
+### Operations
+
+- [Stripe Test Setup](./42-STRIPE-TESTING.md)
+
 ### Planning
+
 - [Roadmap](./40-ROADMAP.md)
 - [Changelog](./41-CHANGELOG.md)
 
@@ -44,9 +51,12 @@ The application currently includes:
 - Favorites
 - Conversation creation
 - Persistent messages
+- Live streaming AI chat and usage metering
+- Creator identity and appearance tooling
+- Stripe Checkout, billing portal, and synchronized subscription authorization
 - PostgreSQL database
 - Prisma migrations and seed data
 - Docker-based local database
 - GitHub Actions foundation
 
-The next major milestone is live AI chat with streaming responses.
+The next major milestone is retention through long-term memory and conversation summaries.

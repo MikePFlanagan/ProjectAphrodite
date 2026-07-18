@@ -1,62 +1,57 @@
 import Link from 'next/link';
-import {
-  ArrowRight,
-  Compass,
-  MessageCircle,
-  Sparkles,
-  Stars,
-} from 'lucide-react';
+import { ArrowRight, Compass, MessageCircle, Sparkles, Stars } from 'lucide-react';
 
 import { db } from '@aphrodite/database';
 
 import { CharacterGrid } from '@/components/characters/CharacterGrid';
 import { EmptyState } from '@/components/characters/EmptyState';
+import { dailyMessageLimit, effectivePlan } from '@/lib/chat-usage';
 import { requireUser } from '@/lib/require-auth';
 
 export default async function DashboardPage() {
   const user = await requireUser();
 
-  const [featured, recent, conversations, subscription] =
-    await Promise.all([
-      db.character.findMany({
-        where: {
-          isPublished: true,
-          isFeatured: true,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 3,
-      }),
-      db.character.findMany({
-        where: {
-          isPublished: true,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 3,
-      }),
-      db.conversation.findMany({
-        where: {
-          userId: user.id,
-        },
-        include: {
-          character: true,
-        },
-        orderBy: {
-          lastMessageAt: 'desc',
-        },
-        take: 4,
-      }),
-      db.subscription.findUnique({
-        where: {
-          userId: user.id,
-        },
-      }),
-    ]);
+  const [featured, recent, conversations, subscription] = await Promise.all([
+    db.character.findMany({
+      where: {
+        isPublished: true,
+        isFeatured: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 3,
+    }),
+    db.character.findMany({
+      where: {
+        isPublished: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 3,
+    }),
+    db.conversation.findMany({
+      where: {
+        userId: user.id,
+      },
+      include: {
+        character: true,
+      },
+      orderBy: {
+        lastMessageAt: 'desc',
+      },
+      take: 4,
+    }),
+    db.subscription.findUnique({
+      where: {
+        userId: user.id,
+      },
+    }),
+  ]);
 
   const firstName = user.name?.split(' ')[0] ?? 'there';
+  const plan = effectivePlan(subscription);
 
   return (
     <div className="space-y-12">
@@ -75,8 +70,8 @@ export default async function DashboardPage() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-sm leading-6 text-white/50 sm:text-base">
-            Continue a meaningful conversation, discover someone new,
-            or create a companion shaped around what matters to you.
+            Continue a meaningful conversation, discover someone new, or create a companion shaped
+            around what matters to you.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
@@ -90,7 +85,7 @@ export default async function DashboardPage() {
 
             <Link
               href="/creator"
-              className="inline-flex items-center gap-2 rounded-2xl border border-white/12 bg-white/[0.045] px-5 py-3 text-sm font-semibold text-white/75 backdrop-blur transition hover:bg-white/[0.09] hover:text-white"
+              className="border-white/12 inline-flex items-center gap-2 rounded-2xl border bg-white/[0.045] px-5 py-3 text-sm font-semibold text-white/75 backdrop-blur transition hover:bg-white/[0.09] hover:text-white"
             >
               <Stars className="size-4" />
               Create your own
@@ -101,11 +96,7 @@ export default async function DashboardPage() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div>
-          <SectionHeading
-            eyebrow="RECENT ACTIVITY"
-            title="Continue chatting"
-            href="/explore"
-          />
+          <SectionHeading eyebrow="RECENT ACTIVITY" title="Continue chatting" href="/explore" />
 
           <div className="mt-5">
             {conversations.length ? (
@@ -118,19 +109,15 @@ export default async function DashboardPage() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-400/25 to-violet-500/20 text-sm font-semibold text-fuchsia-100">
-                        {conversation.character.name
-                          .slice(0, 1)
-                          .toUpperCase()}
+                        {conversation.character.name.slice(0, 1).toUpperCase()}
                       </div>
 
                       <ArrowRight className="size-4 text-white/20 transition group-hover:translate-x-1 group-hover:text-fuchsia-200" />
                     </div>
 
-                    <p className="mt-5 font-medium text-white">
-                      {conversation.character.name}
-                    </p>
+                    <p className="mt-5 font-medium text-white">{conversation.character.name}</p>
 
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/42">
+                    <p className="text-white/42 mt-2 line-clamp-2 text-sm leading-6">
                       {conversation.character.greeting}
                     </p>
 
@@ -159,20 +146,20 @@ export default async function DashboardPage() {
             <Sparkles className="size-4 text-fuchsia-200/70" />
           </div>
 
-          <p className="mt-7 text-3xl font-semibold tracking-[-0.05em] text-white">
-            {subscription?.plan ?? 'FREE'}
-          </p>
+          <p className="mt-7 text-3xl font-semibold tracking-[-0.05em] text-white">{plan}</p>
 
           <p className="mt-3 text-sm leading-6 text-white/45">
-            {subscription?.status === 'ACTIVE'
-              ? 'Your subscription is active and ready.'
-              : 'Explore the platform and begin building your connection.'}
+            {plan === 'FREE'
+              ? 'Explore the platform and begin building your connection.'
+              : subscription?.cancelAtPeriodEnd
+                ? 'Premium stays active through the end of your paid period.'
+                : 'Your subscription is active and ready.'}
           </p>
 
           <div className="mt-7 space-y-3 text-sm text-white/55">
             <div className="flex items-center gap-3">
               <span className="size-1.5 rounded-full bg-fuchsia-300" />
-              Discover original companions
+              {dailyMessageLimit(plan).toLocaleString()} messages each day
             </div>
             <div className="flex items-center gap-3">
               <span className="size-1.5 rounded-full bg-fuchsia-300" />
@@ -188,17 +175,13 @@ export default async function DashboardPage() {
             href="/billing"
             className="mt-8 block rounded-2xl bg-white px-4 py-3 text-center text-sm font-semibold text-[#170d20] transition hover:bg-fuchsia-100"
           >
-            Explore premium
+            {plan === 'FREE' ? 'Explore Premium' : 'Manage billing'}
           </Link>
         </aside>
       </section>
 
       <section>
-        <SectionHeading
-          eyebrow="CURATED FOR YOU"
-          title="Featured companions"
-          href="/explore"
-        />
+        <SectionHeading eyebrow="CURATED FOR YOU" title="Featured companions" href="/explore" />
 
         <div className="mt-5">
           <CharacterGrid characters={featured} />
@@ -206,11 +189,7 @@ export default async function DashboardPage() {
       </section>
 
       <section>
-        <SectionHeading
-          eyebrow="FRESH ARRIVALS"
-          title="Recently added"
-          href="/explore"
-        />
+        <SectionHeading eyebrow="FRESH ARRIVALS" title="Recently added" href="/explore" />
 
         <div className="mt-5">
           <CharacterGrid characters={recent} />
@@ -236,9 +215,7 @@ function SectionHeading({
           {eyebrow}
         </p>
 
-        <h2 className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-white">
-          {title}
-        </h2>
+        <h2 className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-white">{title}</h2>
       </div>
 
       <Link
