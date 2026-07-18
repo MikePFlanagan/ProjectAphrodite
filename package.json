@@ -2,7 +2,10 @@
   "name": "project-aphrodite",
   "private": true,
   "packageManager": "pnpm@10.10.0",
-  "engines": { "node": ">=22.0.0", "pnpm": ">=10.0.0" },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -11,10 +14,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:generate": "pnpm --filter @aphrodite/database generate",
-    "db:migrate": "pnpm --filter @aphrodite/database migrate"
-    ,"db:seed": "pnpm --filter @aphrodite/database seed"
-    ,"db:studio": "pnpm --filter @aphrodite/database studio"
-    ,"db:validate": "pnpm --filter @aphrodite/database validate"
+    "db:migrate": "pnpm --filter @aphrodite/database migrate",
+    "db:seed": "pnpm --filter @aphrodite/database seed",
+    "db:studio": "pnpm --filter @aphrodite/database studio",
+    "db:validate": "pnpm --filter @aphrodite/database validate",
+    "founder": "node scripts/founder.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
