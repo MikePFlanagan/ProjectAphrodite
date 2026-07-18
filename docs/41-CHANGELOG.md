@@ -9,6 +9,7 @@ The project currently follows an alpha-stage release process.
 ### Added
 
 - Stripe Checkout, customer billing portal, verified subscription webhooks, and synchronized paid access
+- In-context Premium upgrade prompts when Free chat quotas are exhausted
 - Live streaming character chat with persistent user and assistant messages
 - Plan-aware daily chat limits enforced server-side
 - Per-conversation token usage and configurable cost telemetry

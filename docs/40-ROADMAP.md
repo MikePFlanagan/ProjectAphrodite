@@ -80,7 +80,7 @@ Status: Complete
 
 ## Version 0.4 Alpha — Monetization
 
-Status: Next
+Status: Implementation Complete — Stripe Test Configuration Required
 
 ### Goals
 
@@ -104,7 +104,7 @@ Status: Next
 
 ## Version 0.5 Alpha — Retention
 
-Status: Planned
+Status: Next
 
 ### Goals
 

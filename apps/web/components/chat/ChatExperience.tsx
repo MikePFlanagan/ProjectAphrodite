@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { AlertCircle, Bot, LoaderCircle, Send, Sparkles } from 'lucide-react';
 
@@ -32,6 +33,7 @@ export function ChatExperience({
   const [content, setContent] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const [usage, setUsage] = useState<ChatUsageInfo | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,6 +56,7 @@ export function ChatExperience({
     }
 
     setError(null);
+    setErrorCode(null);
     setContent('');
     setIsStreaming(true);
 
@@ -92,11 +95,13 @@ export function ChatExperience({
       if (!response.ok) {
         const responseBody = (await response.json().catch(() => null)) as {
           error?: string;
+          code?: string;
           messagePersisted?: boolean;
           usage?: ChatUsageInfo;
         } | null;
 
         messagePersisted = responseBody?.messagePersisted ?? false;
+        setErrorCode(responseBody?.code ?? null);
         if (responseBody?.usage) setUsage(responseBody.usage);
 
         throw new Error(responseBody?.error ?? 'Unable to generate a response.');
@@ -231,9 +236,19 @@ export function ChatExperience({
 
       <div className="sticky bottom-0 border-t border-white/[0.08] bg-[#09070d]/90 pt-5 backdrop-blur-xl">
         {error ? (
-          <div className="mb-3 flex items-center gap-2 rounded-2xl border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 text-sm text-rose-100">
-            <AlertCircle className="size-4 shrink-0" />
-            {error}
+          <div className="mb-3 flex flex-wrap items-center gap-3 rounded-2xl border border-rose-300/20 bg-rose-300/[0.08] px-4 py-3 text-sm text-rose-100">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              <AlertCircle className="size-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+            {errorCode === 'CHAT_DAILY_LIMIT' && usage?.plan === 'FREE' ? (
+              <Link
+                href="/billing"
+                className="shrink-0 rounded-xl bg-white px-3 py-2 text-xs font-semibold text-[#170d20] transition hover:bg-fuchsia-100"
+              >
+                Upgrade to Premium
+              </Link>
+            ) : null}
           </div>
         ) : null}
 
