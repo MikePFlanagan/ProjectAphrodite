@@ -6,12 +6,15 @@ The project currently follows an alpha-stage release process.
 
 ## Unreleased
 
+### Added
+
+- Live streaming character chat with persistent user and assistant messages
+- Plan-aware daily chat limits enforced server-side
+- Per-conversation token usage and configurable cost telemetry
+- Recoverable composer states for provider and quota failures
+
 ### Planned
 
-- Live streaming AI chat
-- Message composer activation
-- AI provider integration
-- Conversation usage limits
 - Stripe subscription integration
 
 ## v0.2.0-alpha
