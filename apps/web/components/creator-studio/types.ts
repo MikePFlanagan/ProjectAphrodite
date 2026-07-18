@@ -12,6 +12,7 @@ export type StudioSection = {
 };
 
 export type CompanionDraft = {
+  id?: string;
   name: string;
   slug: string;
   tagline: string;
@@ -20,3 +21,5 @@ export type CompanionDraft = {
   category: string;
   traits: string[];
 };
+
+export type DraftSaveStatus = 'loading' | 'saving' | 'saved' | 'error';

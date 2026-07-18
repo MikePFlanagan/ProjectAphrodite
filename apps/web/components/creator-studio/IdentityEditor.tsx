@@ -8,13 +8,13 @@ type IdentityEditorProps = {
 };
 
 const categories = [
-  'Friendly',
-  'Romantic',
-  'Mentor',
-  'Adventure',
-  'Fantasy',
-  'Sci-Fi',
-  'Lifestyle',
+  { value: 'FRIENDLY', label: 'Friendly' },
+  { value: 'ROMANTIC', label: 'Romantic' },
+  { value: 'MENTOR', label: 'Mentor' },
+  { value: 'ADVENTURE', label: 'Adventure' },
+  { value: 'FANTASY', label: 'Fantasy' },
+  { value: 'SCI_FI', label: 'Sci-Fi' },
+  { value: 'LIFESTYLE', label: 'Lifestyle' },
 ];
 
 export function IdentityEditor({ companion, onChange }: IdentityEditorProps) {
@@ -85,8 +85,8 @@ export function IdentityEditor({ companion, onChange }: IdentityEditorProps) {
             className={inputClassName}
           >
             {categories.map((category) => (
-              <option key={category} value={category} className="bg-[#120d18]">
-                {category}
+              <option key={category.value} value={category.value} className="bg-[#120d18]">
+                {category.label}
               </option>
             ))}
           </select>
@@ -178,8 +178,7 @@ export function IdentityEditor({ companion, onChange }: IdentityEditorProps) {
             <p className="text-sm font-medium text-white">Live preview enabled</p>
 
             <p className="text-white/38 mt-1 text-xs leading-5">
-              Changes made here immediately update the companion preview on the right. Database
-              saving comes in the next milestone.
+              Changes update the live preview immediately and save automatically after you pause.
             </p>
           </div>
         </div>
