@@ -1,4 +1,9 @@
-import type { AppearanceAssetTypeOption, PromptField } from './types';
+import type {
+  AppearanceAssetTypeOption,
+  CharacterLock,
+  PromptField,
+  ReferenceImage,
+} from './types';
 
 export const appearanceAssetTypes: AppearanceAssetTypeOption[] = [
   {
@@ -22,4 +27,19 @@ export const promptFields: PromptField[] = [
   { id: 'lighting', label: 'Lighting', placeholder: 'Studio lighting...' },
   { id: 'environment', label: 'Environment', placeholder: 'Beach, studio...' },
   { id: 'style', label: 'Style', placeholder: 'Photorealistic...' },
+];
+
+export const characterLocks: CharacterLock[] = [
+  { id: 'face', label: 'Face', enabled: true },
+  { id: 'hair', label: 'Hair', enabled: true },
+  { id: 'eyes', label: 'Eyes', enabled: true },
+  { id: 'body', label: 'Body', enabled: true },
+  { id: 'age', label: 'Age', enabled: true },
+  { id: 'style', label: 'Style', enabled: false },
+];
+
+export const referenceImages: ReferenceImage[] = [
+  { id: 'master', title: 'Master Portrait', description: 'Primary reference image' },
+  { id: 'side', title: 'Side Profile', description: 'Side reference' },
+  { id: 'back', title: 'Back View', description: 'Back reference' },
 ];

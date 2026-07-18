@@ -12,3 +12,15 @@ export interface PromptField {
   label: string;
   placeholder: string;
 }
+
+export interface CharacterLock {
+  id: string;
+  label: string;
+  enabled: boolean;
+}
+
+export interface ReferenceImage {
+  id: string;
+  title: string;
+  description: string;
+}
