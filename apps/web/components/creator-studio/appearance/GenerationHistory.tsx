@@ -5,10 +5,18 @@ import type { MockGenerationResult } from './providers/MockImageProvider';
 type GenerationHistoryProps = {
   results: MockGenerationResult[];
   selectedId: string | null;
+  isLoading: boolean;
+  error: string | null;
   onSelect: (result: MockGenerationResult) => void;
 };
 
-export function GenerationHistory({ results, selectedId, onSelect }: GenerationHistoryProps) {
+export function GenerationHistory({
+  results,
+  selectedId,
+  isLoading,
+  error,
+  onSelect,
+}: GenerationHistoryProps) {
   return (
     <section className="rounded-[26px] border border-white/[0.09] bg-white/[0.025] p-6">
       <div className="flex items-center gap-3">
@@ -16,16 +24,29 @@ export function GenerationHistory({ results, selectedId, onSelect }: GenerationH
           <History className="size-5 text-fuchsia-200" />
         </div>
         <div>
-          <h3 className="text-base font-semibold text-white">Session History</h3>
+          <h3 className="text-base font-semibold text-white">Saved Generations</h3>
           <p className="mt-1 text-xs text-white/40">
-            Compare and restore outputs from this session.
+            Compare and restore your latest generated assets.
           </p>
         </div>
       </div>
 
-      {results.length === 0 ? (
+      {error ? (
+        <p
+          role="alert"
+          className="mt-4 rounded-xl border border-rose-300/15 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-100/70"
+        >
+          {error}
+        </p>
+      ) : null}
+
+      {isLoading ? (
         <div className="mt-5 rounded-2xl border border-dashed border-white/10 p-6 text-center text-xs text-white/30">
-          Generated variations will appear here.
+          Loading saved generations…
+        </div>
+      ) : results.length === 0 ? (
+        <div className="mt-5 rounded-2xl border border-dashed border-white/10 p-6 text-center text-xs text-white/30">
+          Generated variations will be saved here.
         </div>
       ) : (
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
