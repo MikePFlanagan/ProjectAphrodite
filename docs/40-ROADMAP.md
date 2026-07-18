@@ -54,7 +54,7 @@ Status: Complete
 
 ## Version 0.3 Alpha — Live AI Chat
 
-Status: Next
+Status: Complete
 
 ### Goals
 
@@ -80,7 +80,7 @@ Status: Next
 
 ## Version 0.4 Alpha — Monetization
 
-Status: Planned
+Status: Next
 
 ### Goals
 

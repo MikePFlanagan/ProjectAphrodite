@@ -57,9 +57,7 @@ export async function POST(request: Request) {
       include: {
         character: true,
         messages: {
-          orderBy: {
-            createdAt: 'asc',
-          },
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
           take: 40,
         },
       },
@@ -126,7 +124,7 @@ export async function POST(request: Request) {
         personalityPrompt: conversation.character.personalityPrompt,
       }),
       messages: [
-        ...conversation.messages.map((message) => ({
+        ...[...conversation.messages].reverse().map((message) => ({
           role:
             message.role === 'USER'
               ? ('user' as const)
@@ -185,6 +183,7 @@ export async function POST(request: Request) {
 
     return result.toTextStreamResponse({
       headers: {
+        'X-Message-Persisted': 'true',
         'X-Chat-Plan': plan,
         'X-Chat-Limit': String(limit),
         'X-Chat-Remaining': String(Math.max(0, limit - used - 1)),
