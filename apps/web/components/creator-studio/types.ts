@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { Personality } from '@aphrodite/entity-dna';
 
 export type StudioSectionId =
   'identity' | 'appearance' | 'personality' | 'voice' | 'knowledge' | 'gallery' | 'publish';
@@ -20,6 +21,7 @@ export type CompanionDraft = {
   greeting: string;
   category: string;
   traits: string[];
+  personality: Personality;
 };
 
 export type DraftSaveStatus = 'loading' | 'saving' | 'saved' | 'error';
