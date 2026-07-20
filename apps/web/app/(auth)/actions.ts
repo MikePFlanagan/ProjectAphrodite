@@ -9,7 +9,7 @@ import { loginSchema, signupSchema } from '@/lib/validations/auth';
 
 export type AuthState = { error?: string; fieldErrors?: Record<string, string[] | undefined> };
 
-export async function signupAction(_: AuthState, formData: FormData): Promise<AuthState> {
+/*export async function signupAction(_: AuthState, formData: FormData): Promise<AuthState> {
   const parsed = signupSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { fieldErrors: parsed.error.flatten().fieldErrors };
   const email = parsed.data.email.toLowerCase();
@@ -17,6 +17,43 @@ export async function signupAction(_: AuthState, formData: FormData): Promise<Au
   await db.user.create({ data: { name: parsed.data.name, email, passwordHash: await hash(parsed.data.password, 12) } });
   redirect('/login?created=1');
 }
+*/
+
+
+export async function signupAction(_: AuthState, formData: FormData): Promise<AuthState> {
+  try {
+    const parsed = signupSchema.safeParse(Object.fromEntries(formData));
+
+    if (!parsed.success) {
+      return { fieldErrors: parsed.error.flatten().fieldErrors };
+    }
+
+    const email = parsed.data.email.toLowerCase();
+
+    const existing = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (existing) {
+      return { error: "An account already exists for this email." };
+    }
+
+    await db.user.create({
+      data: {
+        name: parsed.data.name,
+        email,
+        passwordHash: await hash(parsed.data.password, 12),
+      },
+    });
+
+    redirect("/login?created=1");
+  } catch (err) {
+    console.error("========== SIGNUP ERROR ==========");
+    console.dir(err, { depth: null });
+    throw err;
+  }
+}
+
 
 export async function loginAction(_: AuthState, formData: FormData): Promise<AuthState> {
   const parsed = loginSchema.safeParse(Object.fromEntries(formData));

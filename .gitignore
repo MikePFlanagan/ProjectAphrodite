@@ -11,3 +11,10 @@ coverage
 # Local source archives
 ProjectAphrodite_Source.zip
 *.zip
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Local pnpm store
+.pnpm-store/
