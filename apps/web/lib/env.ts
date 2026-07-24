@@ -5,9 +5,10 @@ const environmentSchema = z.object({
   AUTH_SECRET: z.string().min(32),
   NEXTAUTH_URL: z.string().url(),
   OPENAI_API_KEY: z.string().optional(),
+  OPENAI_MODEL: z.string().optional(),
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  STRIPE_PREMIUM_PRICE_ID: z.string().optional(),
 });
 
 export const env = environmentSchema.parse({
@@ -15,7 +16,8 @@ export const env = environmentSchema.parse({
   AUTH_SECRET: process.env.AUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  OPENAI_MODEL: process.env.OPENAI_MODEL,
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  STRIPE_PREMIUM_PRICE_ID: process.env.STRIPE_PREMIUM_PRICE_ID,
 });

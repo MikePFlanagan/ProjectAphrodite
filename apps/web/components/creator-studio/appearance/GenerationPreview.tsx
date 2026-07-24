@@ -1,9 +1,9 @@
 import { ImageIcon, LoaderCircle, Sparkles } from 'lucide-react';
 
-import type { MockGenerationResult } from './providers/MockImageProvider';
+import type { ImageGenerationResult } from './providers/ImageProvider';
 
 type GenerationPreviewProps = {
-  result: MockGenerationResult | null;
+  result: ImageGenerationResult | null;
   isGenerating: boolean;
   canGenerate: boolean;
   onGenerate: () => void;

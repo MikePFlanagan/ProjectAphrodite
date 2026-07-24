@@ -2,6 +2,12 @@ import Stripe from 'stripe';
 
 let stripeClient: Stripe | undefined;
 
+export function isBillingConfigured() {
+  return ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_PREMIUM_PRICE_ID'].every((name) =>
+    Boolean(process.env[name]?.trim()),
+  );
+}
+
 function requiredEnvironmentVariable(name: string) {
   const value = process.env[name]?.trim();
 

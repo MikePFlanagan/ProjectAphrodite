@@ -3,7 +3,12 @@ import { NextResponse } from 'next/server';
 import { db } from '@aphrodite/database';
 
 import { auth } from '@/auth';
-import { applicationUrl, getStripe, isTrustedBillingRequest } from '@/lib/stripe';
+import {
+  applicationUrl,
+  getStripe,
+  isBillingConfigured,
+  isTrustedBillingRequest,
+} from '@/lib/stripe';
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -14,6 +19,10 @@ export async function POST(request: Request) {
 
   if (!isTrustedBillingRequest(request)) {
     return NextResponse.json({ error: 'Invalid request origin' }, { status: 403 });
+  }
+
+  if (!isBillingConfigured()) {
+    return NextResponse.redirect(`${applicationUrl()}/billing?billing=unavailable`, 303);
   }
 
   const appUrl = applicationUrl();

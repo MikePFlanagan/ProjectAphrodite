@@ -1,13 +1,13 @@
 import { History, Sparkles } from 'lucide-react';
 
-import type { MockGenerationResult } from './providers/MockImageProvider';
+import type { ImageGenerationResult } from './providers/ImageProvider';
 
 type GenerationHistoryProps = {
-  results: MockGenerationResult[];
+  results: ImageGenerationResult[];
   selectedId: string | null;
   isLoading: boolean;
   error: string | null;
-  onSelect: (result: MockGenerationResult) => void;
+  onSelect: (result: ImageGenerationResult) => void;
 };
 
 export function GenerationHistory({

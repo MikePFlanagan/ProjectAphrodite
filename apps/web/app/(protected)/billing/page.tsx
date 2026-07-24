@@ -4,6 +4,7 @@ import { db } from '@aphrodite/database';
 
 import { dailyMessageLimit, effectivePlan } from '@/lib/chat-usage';
 import { requireUser } from '@/lib/require-auth';
+import { isBillingConfigured } from '@/lib/stripe';
 
 const notices: Record<string, string> = {
   success: 'Checkout completed. Your plan will update as soon as Stripe confirms it.',
@@ -23,6 +24,7 @@ export default async function BillingPage({
   const params = await searchParams;
   const notice = notices[params.checkout ?? params.billing ?? ''];
   const isPremium = plan === 'PREMIUM';
+  const billingConfigured = isBillingConfigured();
 
   return (
     <div className="space-y-8">
@@ -68,15 +70,21 @@ export default async function BillingPage({
           current={isPremium}
           featured
           action={
-            <form
-              action={isPremium ? '/api/billing/portal' : '/api/billing/checkout'}
-              method="post"
-            >
-              <button className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#170d20] transition hover:bg-fuchsia-100">
-                <Sparkles className="size-4" />
-                {isPremium ? 'Manage subscription' : 'Upgrade with Stripe'}
-              </button>
-            </form>
+            !billingConfigured ? (
+              <p className="mt-7 rounded-xl border border-white/10 bg-black/15 px-4 py-3 text-center text-xs text-white/45">
+                Billing management is temporarily unavailable.
+              </p>
+            ) : (
+              <form
+                action={isPremium ? '/api/billing/portal' : '/api/billing/checkout'}
+                method="post"
+              >
+                <button className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#170d20] transition hover:bg-fuchsia-100">
+                  <Sparkles className="size-4" />
+                  {isPremium ? 'Manage subscription' : 'Upgrade with Stripe'}
+                </button>
+              </form>
+            )
           }
         />
       </div>

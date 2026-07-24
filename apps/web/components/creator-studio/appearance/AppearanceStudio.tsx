@@ -9,14 +9,15 @@ import { GenerationHistory } from './GenerationHistory';
 import { PromptBuilder } from './PromptBuilder';
 import { ReferenceLibrary } from './ReferenceLibrary';
 import { characterLocks } from './config';
-import { generateMockPreview, type MockGenerationResult } from './providers/MockImageProvider';
+import type { ImageGenerationResult } from './providers/ImageProvider';
+import { localMockProvider } from './providers/LocalMockProvider';
 import type { AppearanceAssetType, CharacterLock } from './types';
 
 export function AppearanceStudio({ draftId }: { draftId?: string }) {
   const [assetType, setAssetType] = useState<AppearanceAssetType>('portrait');
   const [promptValues, setPromptValues] = useState<Record<string, string>>({});
   const [locks, setLocks] = useState<CharacterLock[]>(characterLocks);
-  const [results, setResults] = useState<MockGenerationResult[]>([]);
+  const [results, setResults] = useState<ImageGenerationResult[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
@@ -30,7 +31,7 @@ export function AppearanceStudio({ draftId }: { draftId?: string }) {
       try {
         const response = await fetch(`/api/creator/assets?draftId=${encodeURIComponent(draftId)}`);
         if (!response.ok) throw new Error('Could not load saved assets.');
-        const data = (await response.json()) as { assets: MockGenerationResult[] };
+        const data = (await response.json()) as { assets: ImageGenerationResult[] };
         if (!active) return;
         setResults(data.assets);
         setSelectedId(data.assets[0]?.id ?? null);
@@ -69,7 +70,7 @@ export function AppearanceStudio({ draftId }: { draftId?: string }) {
 
     setIsGenerating(true);
     try {
-      const nextResult = await generateMockPreview({
+      const nextResult = await localMockProvider.generate({
         assetType,
         promptValues,
         locks,
@@ -81,7 +82,7 @@ export function AppearanceStudio({ draftId }: { draftId?: string }) {
         body: JSON.stringify({ ...nextResult, draftId }),
       });
       if (!response.ok) throw new Error('Could not save generated asset.');
-      const data = (await response.json()) as { asset: MockGenerationResult };
+      const data = (await response.json()) as { asset: ImageGenerationResult };
       setResults((current) => [data.asset, ...current]);
       setSelectedId(data.asset.id);
       setHistoryError(null);
