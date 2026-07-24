@@ -9,8 +9,8 @@ import { GenerationHistory } from './GenerationHistory';
 import { PromptBuilder } from './PromptBuilder';
 import { ReferenceLibrary } from './ReferenceLibrary';
 import { characterLocks } from './config';
+import { comfyUiProvider } from './providers/ComfyUiProvider';
 import type { ImageGenerationResult } from './providers/ImageProvider';
-import { localMockProvider } from './providers/LocalMockProvider';
 import type { AppearanceAssetType, CharacterLock } from './types';
 
 export function AppearanceStudio({ draftId }: { draftId?: string }) {
@@ -70,7 +70,7 @@ export function AppearanceStudio({ draftId }: { draftId?: string }) {
 
     setIsGenerating(true);
     try {
-      const nextResult = await localMockProvider.generate({
+      const nextResult = await comfyUiProvider.generate({
         assetType,
         promptValues,
         locks,
@@ -81,13 +81,20 @@ export function AppearanceStudio({ draftId }: { draftId?: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...nextResult, draftId }),
       });
-      if (!response.ok) throw new Error('Could not save generated asset.');
+      if (!response.ok) {
+        const error = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(error?.error || 'Could not save generated asset.');
+      }
       const data = (await response.json()) as { asset: ImageGenerationResult };
       setResults((current) => [data.asset, ...current]);
       setSelectedId(data.asset.id);
       setHistoryError(null);
-    } catch {
-      setHistoryError('That variation could not be saved. Please try again.');
+    } catch (error) {
+      setHistoryError(
+        error instanceof Error
+          ? error.message
+          : 'That variation could not be saved. Please try again.',
+      );
     } finally {
       setIsGenerating(false);
     }

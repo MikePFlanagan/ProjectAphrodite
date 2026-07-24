@@ -52,7 +52,12 @@ const navigation = [
   },
 ];
 
-export function DashboardSidebar() {
+type RecentChat = {
+  id: string;
+  characterName: string;
+};
+
+export function DashboardSidebar({ recentChats }: { recentChats: RecentChat[] }) {
   const pathname = usePathname();
 
   return (
@@ -132,9 +137,23 @@ export function DashboardSidebar() {
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4">
-            <p className="text-sm text-white/45">Your conversations will appear here.</p>
-          </div>
+          {recentChats.length ? (
+            <div className="space-y-1">
+              {recentChats.map((chat) => (
+                <Link
+                  key={chat.id}
+                  href={`/chat/${chat.id}`}
+                  className="text-white/48 block truncate rounded-xl px-3 py-2 text-sm transition hover:bg-white/[0.045] hover:text-white"
+                >
+                  {chat.characterName}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4">
+              <p className="text-sm text-white/45">Your conversations will appear here.</p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
+import { db } from '@aphrodite/database';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { MobileDashboardNav } from '@/components/dashboard/MobileDashboardNav';
 import { UserMenu } from '@/components/dashboard/UserMenu';
@@ -12,10 +13,21 @@ export default async function ProtectedLayout({
   children: React.ReactNode;
 }>) {
   const user = await requireUser();
+  const recentChats = await db.conversation.findMany({
+    where: { userId: user.id },
+    select: { id: true, character: { select: { name: true } } },
+    orderBy: { lastMessageAt: 'desc' },
+    take: 4,
+  });
 
   return (
     <div className="min-h-screen bg-[#09070d] text-white lg:flex">
-      <DashboardSidebar />
+      <DashboardSidebar
+        recentChats={recentChats.map((conversation) => ({
+          id: conversation.id,
+          characterName: conversation.character.name,
+        }))}
+      />
 
       <div className="min-w-0 flex-1 pb-24 lg:pb-0">
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/[0.08] bg-[#09070d]/85 px-5 backdrop-blur-xl sm:px-8">

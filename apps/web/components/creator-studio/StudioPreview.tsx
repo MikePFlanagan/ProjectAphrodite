@@ -1,4 +1,7 @@
-import { MessageCircle, MoreHorizontal, Sparkles } from 'lucide-react';
+'use client';
+
+import { MessageCircle, Sparkles } from 'lucide-react';
+import { useState } from 'react';
 
 import type { CompanionDraft } from './types';
 
@@ -7,6 +10,8 @@ type StudioPreviewProps = {
 };
 
 export function StudioPreview({ companion }: StudioPreviewProps) {
+  const [showConversation, setShowConversation] = useState(false);
+
   return (
     <aside className="border-t border-white/[0.08] bg-[#0d0a12] p-5 lg:border-l lg:border-t-0 xl:p-6">
       <div className="flex items-center justify-between">
@@ -17,14 +22,6 @@ export function StudioPreview({ companion }: StudioPreviewProps) {
 
           <p className="mt-1 text-sm text-white/50">Companion profile</p>
         </div>
-
-        <button
-          type="button"
-          aria-label="Preview options"
-          className="grid size-9 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-white/35 transition hover:text-white"
-        >
-          <MoreHorizontal className="size-4" />
-        </button>
       </div>
 
       <div className="mt-6 overflow-hidden rounded-[28px] border border-white/[0.09] bg-[#120d18] shadow-[0_26px_80px_rgba(0,0,0,0.28)]">
@@ -73,11 +70,21 @@ export function StudioPreview({ companion }: StudioPreviewProps) {
 
           <button
             type="button"
+            onClick={() => setShowConversation((current) => !current)}
+            aria-expanded={showConversation}
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#160d1e] transition hover:bg-fuchsia-100"
           >
             <MessageCircle className="size-4" />
             Preview conversation
           </button>
+          {showConversation ? (
+            <div className="mt-3 rounded-2xl border border-fuchsia-200/15 bg-fuchsia-300/[0.06] p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-fuchsia-100/55">
+                Draft preview · no message is sent
+              </p>
+              <p className="mt-3 text-sm leading-6 text-white/70">{companion.greeting}</p>
+            </div>
+          ) : null}
         </div>
       </div>
 

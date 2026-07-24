@@ -9,6 +9,7 @@
     },
     "dev": { "cache": false, "persistent": true },
     "lint": { "dependsOn": ["^lint"], "outputs": [] },
+    "test": { "dependsOn": ["^test"], "outputs": [] },
     "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] }
   }
 }

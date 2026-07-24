@@ -1,12 +1,4 @@
-import {
-  AlertCircle,
-  Check,
-  Eye,
-  LoaderCircle,
-  MoreHorizontal,
-  Save,
-  Sparkles,
-} from 'lucide-react';
+import { AlertCircle, Check, Eye, LoaderCircle, Save, Sparkles } from 'lucide-react';
 
 import type { DraftSaveStatus } from './types';
 
@@ -14,9 +6,10 @@ type StudioHeaderProps = {
   companionName: string;
   saveStatus: DraftSaveStatus;
   onSave: () => void;
+  onPreview: () => void;
 };
 
-export function StudioHeader({ companionName, saveStatus, onSave }: StudioHeaderProps) {
+export function StudioHeader({ companionName, saveStatus, onSave, onPreview }: StudioHeaderProps) {
   const status = {
     loading: { label: 'Loading draft', icon: LoaderCircle, className: 'text-white/55' },
     saving: { label: 'Saving', icon: LoaderCircle, className: 'text-fuchsia-100/70' },
@@ -56,14 +49,7 @@ export function StudioHeader({ companionName, saveStatus, onSave }: StudioHeader
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
-          aria-label="More studio actions"
-          className="grid size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-white/45 transition hover:bg-white/[0.07] hover:text-white"
-        >
-          <MoreHorizontal className="size-4" />
-        </button>
-
-        <button
-          type="button"
+          onClick={onPreview}
           className="inline-flex h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-white/65 transition hover:bg-white/[0.08] hover:text-white"
         >
           <Eye className="size-4" />

@@ -1,4 +1,5 @@
 import { History, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 import type { ImageGenerationResult } from './providers/ImageProvider';
 
@@ -70,7 +71,17 @@ export function GenerationHistory({
                     background: `radial-gradient(circle at 50% 25%, ${result.palette[0]}aa, transparent 42%), linear-gradient(145deg, ${result.palette[1]}, ${result.palette[2]})`,
                   }}
                 >
-                  <Sparkles className="size-6 text-white/65" />
+                  {result.imageUrl ? (
+                    <Image
+                      src={result.imageUrl}
+                      alt={result.prompt}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  ) : (
+                    <Sparkles className="size-6 text-white/65" />
+                  )}
                 </span>
                 <span className="block p-3">
                   <span className="block text-xs font-semibold capitalize text-white/75">

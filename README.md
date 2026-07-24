@@ -1,82 +1,193 @@
 # Project Aphrodite
 
-Original AI companion SaaS platform with credential authentication, protected character browsing, persistent live AI conversations, creator identity tooling, and Stripe subscription billing.
+Project Aphrodite is a local-first AI companion application with authenticated accounts,
+published characters, persistent conversations, deterministic relationship state, controllable
+memory, creator tools, local FLUX image generation, and optional Stripe billing.
 
-## Architecture
+## Stack and prerequisites
 
-- `apps/web` — Next.js 16 App Router application. It is the only deployable application and owns route handlers, environment validation, and product composition.
-- `packages/ui` — shared React components designed as the import target for shadcn/ui primitives and product UI.
-- `packages/database` — Prisma client singleton and database commands. The schema stays at the required root `prisma/` location.
-- `packages/ai` — provider-neutral Vercel AI SDK contracts and validated companion-message inputs. Provider selection belongs in the web app, so credentials never cross package boundaries.
-- `packages/auth` — shared Auth.js/Prisma adapter boundary; the web app owns the credentials provider and server-side authorization helpers.
-- `packages/config` — shared TypeScript base configuration.
-- `docker` — local PostgreSQL service only.
+- Node.js 22+
+- pnpm 10.10+
+- Docker Desktop
+- Next.js 16, React 19, TypeScript, Tailwind CSS
+- PostgreSQL 17, Prisma 6, Auth.js
+- Optional: OpenAI for production chat, Stripe for billing
+- Optional: ComfyUI with FLUX Schnell for local image generation
 
-The Prisma schema includes Auth.js models, users/roles, published characters, conversations/messages, favorites, memories, and subscription state. Character/demo imagery uses CSS gradients only.
-
-## Local setup
-
-Prerequisites: Node.js 22+, pnpm 10+, Docker Desktop.
+## Local installation
 
 ```sh
+git clone <repository-url> ProjectAphrodite
 cd ProjectAphrodite
 cp .env.example .env
+cp .env.example apps/web/.env.local
 docker compose -f docker/compose.yml up -d
 pnpm install
 pnpm db:generate
-pnpm db:migrate
+pnpm --filter @aphrodite/database exec prisma migrate deploy --schema ../../prisma/schema.prisma
 pnpm db:seed
 pnpm --filter @aphrodite/web dev:3002
 ```
 
-The web application will be available at `http://localhost:3002`.
+Open `http://localhost:3002`. The seed is safe to rerun and upserts the published development
+characters.
 
-Quality and production commands:
+## Environment
 
-```sh
-pnpm lint
-pnpm typecheck
-pnpm format:check
-pnpm build
-pnpm db:validate
-pnpm db:studio
+The canonical list is [.env.example](./.env.example).
+
+- `DATABASE_URL` — PostgreSQL connection string.
+- `AUTH_SECRET` — server-only Auth.js secret of at least 32 characters.
+- `NEXTAUTH_URL` — canonical application origin; use `http://localhost:3002` locally.
+- `AI_PROVIDER` — `mock` for the clearly labeled deterministic development responder or `openai`.
+- `OPENAI_API_KEY` — required only for `AI_PROVIDER=openai`.
+- `OPENAI_MODEL` — defaults to `gpt-5-mini`.
+- `CHAT_DAILY_LIMIT_*` — optional UTC daily message limits.
+- `COMFYUI_URL` — server-only ComfyUI origin, default `http://127.0.0.1:8188`.
+- `FLUX_MODEL` — checkpoint filename visible to ComfyUI.
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PREMIUM_PRICE_ID` — required together to
+  enable real billing.
+
+Never prefix provider credentials with `NEXT_PUBLIC_` or commit populated environment files.
+
+## Chat and relationship behavior
+
+`AI_PROVIDER=mock` is a zero-cost development mode. Every response starts with
+`[Development response]`; it is not presented as a real model response. Messages, usage, history,
+ownership checks, daily limits, and deterministic relationship updates remain active.
+
+Set `AI_PROVIDER=openai` and provide `OPENAI_API_KEY` for model responses. The server owns the
+character prompt and provider key. Conversation reads and writes are always scoped to the
+authenticated user.
+
+## Local FLUX / ComfyUI
+
+The implementation uses ComfyUI's HTTP API:
+
+- health: `GET ${COMFYUI_URL}/system_stats`
+- queue: `POST ${COMFYUI_URL}/prompt`
+- status: `GET ${COMFYUI_URL}/history/{promptId}`
+- image bytes: `GET ${COMFYUI_URL}/view?...`
+
+The application endpoint is `POST /api/generate`. It accepts an authenticated, validated JSON
+request containing `prompt`, `width`, `height`, and optional generation settings. A successful
+response contains a protected application URL, not an absolute machine path:
+
+```json
+{
+  "success": true,
+  "imageUrl": "/api/generated-image?filename=...&subfolder=&type=output",
+  "promptId": "..."
+}
 ```
 
-## Environment variables
+Creator Studio saves that URL to an owner-scoped `CreatorAsset`. The image proxy verifies the
+signed-in user owns the matching asset before requesting bytes from ComfyUI. Service details and
+local filesystem paths never reach the browser.
 
-Required for local database and Auth.js startup:
+For the currently discovered local installation:
 
-- `DATABASE_URL`
-- `AUTH_SECRET` — generate a high-entropy secret for every deployed environment.
-- `NEXTAUTH_URL` — public application origin, such as `http://localhost:3002`.
+```sh
+/Users/home/Documents/ComfyUI/venv/bin/python \
+  /Users/home/Documents/ComfyUI/main.py \
+  --listen 127.0.0.1 \
+  --port 8188
+```
 
-Required when enabling AI generation:
+Place `flux1-schnell-fp8.safetensors` in ComfyUI's `models/checkpoints` directory, or set
+`FLUX_MODEL` to another installed checkpoint name.
 
-- `OPENAI_API_KEY` — server-only; do not expose with a `NEXT_PUBLIC_` prefix.
-- `OPENAI_MODEL` — defaults to `gpt-5-mini`.
-- `CHAT_DAILY_LIMIT_FREE`, `CHAT_DAILY_LIMIT_PREMIUM`, and `CHAT_DAILY_LIMIT_CREATOR` — optional UTC daily message allowances.
-- `OPENAI_INPUT_COST_PER_MILLION` and `OPENAI_OUTPUT_COST_PER_MILLION` — optional USD rates used to estimate per-response cost telemetry.
+Health checks:
 
-Required for Stripe billing:
+```sh
+curl --fail http://127.0.0.1:8188/system_stats
+curl --fail http://localhost:3002/api/health
+```
 
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-- `STRIPE_PREMIUM_PRICE_ID` — recurring $19/month Premium Price.
+`GET /api/health/flux` is an authenticated application diagnostic and reports only provider/model
+status. Generation may take several minutes on first load; the server polls for up to ten minutes
+and reports offline, provider, and timeout failures honestly.
 
-Register `/api/billing/webhook` as a Stripe webhook endpoint for
-`checkout.session.completed`, `customer.subscription.created`,
-`customer.subscription.updated`, and `customer.subscription.deleted`.
-Premium authorization is granted only for `active` and `trialing` subscriptions. A scheduled
-cancellation retains access through the paid period; incomplete, past-due, or ended subscriptions
-fall back to Free limits.
+## Billing
 
-## Current application routes
+Billing stays disabled unless all Stripe variables are configured. The UI shows an unavailable
+state rather than granting paid access. Checkout and portal routes require authentication and a
+trusted request origin. Subscription access changes only from verified Stripe webhook events.
 
-- Public: `/`, `/login`, `/signup`
-- Protected: `/dashboard`, `/explore`, `/favorites`, `/settings`, `/billing`, `/creator`, `/characters/[slug]`, and `/chat/[conversationId]`
+Register `/api/billing/webhook` for:
 
-Character and conversation access is enforced in server components/actions; URL changes cannot expose another member's conversation. Live chat streams character-specific responses, persists both sides of the conversation, enforces plan-aware daily limits, and records token usage per conversation.
+- `checkout.session.completed`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
 
-## Deliberate next steps
+See [docs/42-STRIPE-TESTING.md](./docs/42-STRIPE-TESTING.md).
 
-Add email/OAuth providers, deeper safety controls, and conversation-memory extraction. Keep those features behind server-side authorization and audit logging.
+## Validation and production build
+
+```sh
+pnpm db:validate
+pnpm db:generate
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm format:check
+pnpm build
+```
+
+Production startup:
+
+```sh
+pnpm --filter @aphrodite/web start -- --hostname 127.0.0.1 --port 3002
+```
+
+## Troubleshooting
+
+### Port 3000 or 3002 is already occupied
+
+Local Aphrodite uses port 3002. Find the existing listener before starting another server:
+
+```sh
+lsof -nP -iTCP:3002 -sTCP:LISTEN
+```
+
+Stop the stale process or keep using the already-running Aphrodite instance.
+
+### PostgreSQL volume or major-version mismatch
+
+The Compose service is explicitly PostgreSQL 17 and uses the named project/volume
+`aphrodite_postgres_data`. Do not delete an existing volume. Back it up and use `pg_dump` /
+`pg_restore` when moving between PostgreSQL major versions.
+
+### Prisma Client is missing or stale
+
+```sh
+pnpm db:generate
+```
+
+Restart the Next.js process after schema changes.
+
+### Authentication errors or redirect loops
+
+Use a 32+ character `AUTH_SECRET` and ensure `NEXTAUTH_URL` exactly matches the browser origin,
+including port 3002. Restart the server after changing either value.
+
+### FLUX is unavailable or times out
+
+Confirm ComfyUI is running at `COMFYUI_URL`, check `/system_stats`, verify the checkpoint named by
+`FLUX_MODEL`, and inspect the ComfyUI terminal. The application timeout is ten minutes.
+
+### ComfyUI returns an unexpected payload
+
+Use the API-format workflow in `apps/web/lib/ai/workflows/flux-schnell.json`. ComfyUI must return a
+`prompt_id`, then an image entry from `/history/{promptId}`.
+
+### A generated file exists but does not render
+
+The signed-in user must own a `CreatorAsset` whose `imageUrl` exactly matches the protected proxy
+URL. Confirm ComfyUI still has the output and that its `/view` response has an image content type.
+
+### Next.js remote-image errors
+
+Generated images use the same-origin protected proxy and require no unrestricted remote host
+configuration. Do not add wildcard image domains.

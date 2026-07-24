@@ -10,6 +10,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
+    "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -29,6 +30,7 @@
     "prettier-plugin-tailwindcss": "^0.6.0",
     "turbo": "^2.4.0",
     "typescript": "^5.8.0",
-    "typescript-eslint": "^8.64.0"
+    "typescript-eslint": "^8.64.0",
+    "tsx": "^4.20.6"
   }
 }

@@ -2,6 +2,7 @@ import { MessageCircle, Sparkles } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 import { db } from '@aphrodite/database';
+import { relationshipLabel } from '@aphrodite/ai';
 
 import { CharacterAvatar } from '@/components/characters/CharacterAvatar';
 import { ChatExperience } from '@/components/chat/ChatExperience';
@@ -17,25 +18,43 @@ export default async function ChatPage({
   const user = await requireUser();
   const { conversationId } = await params;
 
-  const conversation =
-    await db.conversation.findFirst({
-      where: {
-        id: conversationId,
-        userId: user.id,
-      },
-      include: {
-        character: true,
-        messages: {
-          orderBy: {
-            createdAt: 'asc',
-          },
+  const conversation = await db.conversation.findFirst({
+    where: {
+      id: conversationId,
+      userId: user.id,
+    },
+    include: {
+      character: true,
+      messages: {
+        orderBy: {
+          createdAt: 'asc',
         },
       },
-    });
+    },
+  });
 
   if (!conversation) {
     notFound();
   }
+
+  const relationship = await db.relationship.findUnique({
+    where: {
+      userId_characterId: {
+        userId: user.id,
+        characterId: conversation.characterId,
+      },
+    },
+  });
+  const relationshipStatus = relationship
+    ? relationshipLabel({
+        trust: relationship.trust,
+        comfort: relationship.comfort,
+        curiosity: relationship.curiosity,
+        playfulness: relationship.playfulness,
+        affection: relationship.affection,
+        respect: relationship.respect,
+      })
+    : 'New';
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -56,15 +75,13 @@ export default async function ChatPage({
               <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
             </div>
 
-            <p className="mt-1 truncate text-sm text-white/40">
-              {conversation.character.tagline}
-            </p>
+            <p className="mt-1 truncate text-sm text-white/40">{conversation.character.tagline}</p>
           </div>
         </div>
 
         <div className="hidden items-center gap-2 rounded-2xl border border-fuchsia-200/15 bg-fuchsia-300/[0.07] px-3 py-2 text-xs text-fuchsia-100/70 sm:flex">
           <Sparkles className="size-3.5" />
-          Live AI
+          {relationshipStatus} relationship
         </div>
       </header>
 
@@ -76,13 +93,11 @@ export default async function ChatPage({
       <ChatExperience
         conversationId={conversation.id}
         characterName={conversation.character.name}
-        initialMessages={conversation.messages.map(
-          (message) => ({
-            id: message.id,
-            role: message.role,
-            content: message.content,
-          }),
-        )}
+        initialMessages={conversation.messages.map((message) => ({
+          id: message.id,
+          role: message.role,
+          content: message.content,
+        }))}
       />
     </div>
   );

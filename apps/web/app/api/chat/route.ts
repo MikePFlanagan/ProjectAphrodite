@@ -1,7 +1,13 @@
 import { streamText } from 'ai';
 import { z } from 'zod';
 
-import { buildCharacterSystemPrompt, getOpenAIModel } from '@aphrodite/ai';
+import {
+  buildCharacterSystemPrompt,
+  createDevelopmentResponse,
+  evaluateRelationship,
+  getOpenAIModel,
+  updateRelationship,
+} from '@aphrodite/ai';
 import { db } from '@aphrodite/database';
 
 import { auth } from '@/auth';
@@ -104,6 +110,31 @@ export async function POST(request: Request) {
     );
   }
 
+  const relationship = await db.relationship.upsert({
+    where: {
+      userId_characterId: {
+        userId: session.user.id,
+        characterId: conversation.characterId,
+      },
+    },
+    update: {},
+    create: {
+      userId: session.user.id,
+      characterId: conversation.characterId,
+    },
+  });
+  const relationshipScores = updateRelationship(
+    {
+      trust: relationship.trust,
+      comfort: relationship.comfort,
+      curiosity: relationship.curiosity,
+      playfulness: relationship.playfulness,
+      affection: relationship.affection,
+      respect: relationship.respect,
+    },
+    evaluateRelationship(content),
+  );
+
   await db.$transaction([
     db.message.create({
       data: {
@@ -120,10 +151,72 @@ export async function POST(request: Request) {
         lastMessageAt: new Date(),
       },
     }),
+    db.relationship.update({
+      where: { id: relationship.id },
+      data: relationshipScores,
+    }),
   ]);
 
+  const provider =
+    process.env.AI_PROVIDER?.trim().toLowerCase() ??
+    (process.env.OPENAI_API_KEY ? 'openai' : 'mock');
+  const modelName = process.env.OPENAI_MODEL ?? 'gpt-5-mini';
+
+  if (provider === 'mock') {
+    const assistantText = createDevelopmentResponse({
+      characterName: conversation.character.name,
+      characterTagline: conversation.character.tagline,
+      userName: session.user.name?.trim() || 'friend',
+      userMessage: content,
+    });
+
+    await db.$transaction([
+      db.message.create({
+        data: { conversationId, role: 'ASSISTANT', content: assistantText },
+      }),
+      db.conversation.update({
+        where: { id: conversationId },
+        data: { lastMessageAt: new Date() },
+      }),
+      db.chatUsage.create({
+        data: {
+          userId: session.user.id,
+          conversationId,
+          model: 'development-mock',
+          inputTokens: 0,
+          outputTokens: 0,
+          totalTokens: 0,
+          estimatedCostMicros: 0,
+        },
+      }),
+    ]);
+
+    return new Response(assistantText, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'X-Message-Persisted': 'true',
+        'X-Chat-Provider': 'development-mock',
+        'X-Chat-Plan': plan,
+        'X-Chat-Limit': String(limit),
+        'X-Chat-Remaining': String(Math.max(0, limit - used - 1)),
+        'X-Chat-Resets-At': resetsAt.toISOString(),
+      },
+    });
+  }
+
+  if (provider !== 'openai') {
+    return Response.json(
+      {
+        error: `Unsupported AI provider: ${provider}`,
+        code: 'CHAT_PROVIDER_ERROR',
+        messagePersisted: true,
+      },
+      { status: 503 },
+    );
+  }
+
   try {
-    const modelName = process.env.OPENAI_MODEL ?? 'gpt-5-mini';
     const result = streamText({
       model: getOpenAIModel(modelName),
       system: buildCharacterSystemPrompt({

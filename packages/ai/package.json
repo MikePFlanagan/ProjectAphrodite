@@ -8,6 +8,7 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "test": "tsx --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit"
   },

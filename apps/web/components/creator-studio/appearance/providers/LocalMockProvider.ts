@@ -28,6 +28,7 @@ export class LocalMockProvider implements ImageProvider {
       createdAt: new Date().toISOString(),
       prompt: prompt || 'A new Aphrodite companion',
       palette: palettes[paletteIndex] ?? palettes[0]!,
+      imageUrl: null,
     };
   }
 }

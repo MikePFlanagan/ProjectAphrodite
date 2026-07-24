@@ -16,6 +16,7 @@ export type ImageGenerationResult = {
   createdAt: string;
   prompt: string;
   palette: [string, string, string];
+  imageUrl: string | null;
 };
 
 export interface ImageProvider {

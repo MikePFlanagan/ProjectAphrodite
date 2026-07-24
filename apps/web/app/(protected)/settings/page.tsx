@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { MemoryManager } from '@/components/settings/MemoryManager';
+import { ProfileForm } from '@/components/settings/ProfileForm';
 import { requireUser } from '@/lib/require-auth';
 
 export default async function SettingsPage() {
@@ -12,16 +13,7 @@ export default async function SettingsPage() {
       <h1 className="mt-3 text-3xl font-semibold tracking-[-0.05em]">Settings</h1>
       <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
         <p className="text-sm font-medium">Profile</p>
-        <dl className="mt-5 space-y-4 text-sm">
-          <div className="border-white/8 flex justify-between border-b pb-3">
-            <dt className="text-white/45">Name</dt>
-            <dd>{user.name ?? 'Not set'}</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-white/45">Email</dt>
-            <dd>{user.email}</dd>
-          </div>
-        </dl>
+        <ProfileForm name={user.name ?? ''} email={user.email ?? ''} />
       </section>
       <MemoryManager />
       <section

@@ -73,7 +73,14 @@ export function CreatorStudioShell() {
 
   return (
     <div className="-m-5 overflow-hidden border-white/[0.08] bg-[#09070d] sm:-m-8 lg:-m-10 lg:border lg:border-t-0">
-      <StudioHeader companionName={companion.name} saveStatus={saveStatus} onSave={saveDraft} />
+      <StudioHeader
+        companionName={companion.name}
+        saveStatus={saveStatus}
+        onSave={saveDraft}
+        onPreview={() =>
+          document.getElementById('companion-preview')?.scrollIntoView({ behavior: 'smooth' })
+        }
+      />
 
       <div className="grid min-h-[calc(100vh-10rem)] lg:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_340px]">
         <StudioSidebar
@@ -89,7 +96,7 @@ export function CreatorStudioShell() {
           onCompanionChange={setCompanion}
         />
 
-        <div className="lg:col-span-2 xl:col-span-1">
+        <div id="companion-preview" className="scroll-mt-24 lg:col-span-2 xl:col-span-1">
           <StudioPreview companion={companion} />
         </div>
       </div>

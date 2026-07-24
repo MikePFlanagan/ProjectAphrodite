@@ -23,6 +23,7 @@ const createAssetSchema = z.object({
     z.string().regex(/^#[0-9a-f]{6}$/i),
     z.string().regex(/^#[0-9a-f]{6}$/i),
   ]),
+  imageUrl: z.string().startsWith('/api/generated-image?').max(2_000).nullable(),
 });
 
 const draftIdSchema = z.string().cuid();
@@ -66,6 +67,8 @@ export async function POST(request: Request) {
       locks: parsed.data.locks,
       variation: parsed.data.variation,
       palette: parsed.data.palette,
+      imageUrl: parsed.data.imageUrl,
+      provider: parsed.data.imageUrl ? 'comfyui-flux-schnell' : 'mock',
       userId: session.user.id,
       characterId: draft.id,
     },
