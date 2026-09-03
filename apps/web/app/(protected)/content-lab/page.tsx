@@ -48,10 +48,10 @@ export default async function ContentLabPage() {
   return (
     <ContentLabDashboard
       characters={characters}
-      recentAnalyses={recentAnalyses as any}
+      recentAnalyses={recentAnalyses}
       recentConcepts={recentConcepts}
       recentJobs={recentJobs}
-      recentPlans={recentPlans as any}
+      recentPlans={recentPlans}
     />
   );
 }

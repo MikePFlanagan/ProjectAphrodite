@@ -1,30 +1,5 @@
 import { db } from '@aphrodite/database';
-import { z } from 'zod';
-import {
-  contentDnaSchema,
-  hookAnalysisSchema,
-  pacingAnalysisSchema,
-  visualStructureSchema,
-  narrativeSchema,
-  textStrategySchema,
-  audioStrategySchema,
-  engagementSchema,
-  confidenceSchema,
-  type ContentDNA,
-} from './types';
-
-const analysisOutputSchema = z.object({
-  hook: hookAnalysisSchema,
-  pacing: pacingAnalysisSchema,
-  visualStructure: visualStructureSchema,
-  narrative: narrativeSchema,
-  textStrategy: textStrategySchema,
-  audioStrategy: audioStrategySchema,
-  engagement: engagementSchema,
-  archetype: z.string().optional(),
-  contentDna: contentDnaSchema,
-  confidence: confidenceSchema,
-});
+import type { ContentDNA } from './types';
 
 export async function runAnalysis(analysisId: string): Promise<void> {
   const analysis = await db.contentAnalysis.findUnique({

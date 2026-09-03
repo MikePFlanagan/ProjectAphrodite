@@ -67,10 +67,10 @@ export function ContentLabDashboard({
   recentPlans,
 }: {
   characters: Character[];
-  recentAnalyses: any[];
-  recentConcepts: any[];
-  recentJobs: any[];
-  recentPlans: any[];
+  recentAnalyses: { id: string; status: string; createdAt: Date }[];
+  recentConcepts: { id: string; title: string; platform: string | null }[];
+  recentJobs: { id: string; provider: string; status: string }[];
+  recentPlans: { id: string; title: string; _count: { items: number } }[];
 }) {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
     characters[0] ?? null,
@@ -218,10 +218,10 @@ function OverviewTab({
   onNavigate,
 }: {
   character: Character;
-  recentAnalyses: any[];
-  recentConcepts: any[];
-  recentJobs: any[];
-  recentPlans: any[];
+  recentAnalyses: { id: string }[];
+  recentConcepts: { id: string }[];
+  recentJobs: { id: string }[];
+  recentPlans: { id: string }[];
   onNavigate: (tab: Tab) => void;
 }) {
   const cards = [

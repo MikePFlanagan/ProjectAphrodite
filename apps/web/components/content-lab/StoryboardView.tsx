@@ -36,19 +36,30 @@ export function StoryboardView({
   characterId: string;
 }) {
   const [concept, setConcept] = useState<Concept | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!conceptId) return;
-    setLoading(true);
-    fetch(`/api/content-lab/concepts?characterId=${characterId}`)
+    let cancelled = false;
+    const controller = new AbortController();
+
+    fetch(`/api/content-lab/concepts?characterId=${characterId}`, {
+      signal: controller.signal,
+    })
       .then((r) => r.json())
       .then((d) => {
-        const found = (d.concepts ?? []).find((c: any) => c.id === conceptId);
+        if (cancelled) return;
+        const found = (d.concepts ?? []).find((c: Concept) => c.id === conceptId);
         setConcept(found ?? null);
       })
-      .finally(() => setLoading(false));
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [conceptId, characterId]);
+
+  const isLoading = conceptId != null && concept == null;
 
   if (!conceptId) {
     return (
@@ -62,7 +73,7 @@ export function StoryboardView({
     );
   }
 
-  if (loading)
+  if (isLoading)
     return (
       <div className="flex justify-center py-12">
         <Loader2 className="size-6 animate-spin text-fuchsia-300/50" />

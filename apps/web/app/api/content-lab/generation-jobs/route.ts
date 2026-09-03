@@ -82,8 +82,10 @@ export async function POST(request: Request) {
               ? 'FAILED'
               : 'PROCESSING',
         result: result.resultUrl
-          ? { url: result.resultUrl, metadata: result.metadata ?? {} }
-          : ((result.metadata as any) ?? undefined),
+          ? { url: result.resultUrl }
+          : result.metadata
+            ? JSON.parse(JSON.stringify(result.metadata))
+            : undefined,
         startedAt: new Date(),
         ...(result.status === 'completed' || result.status === 'failed'
           ? { completedAt: new Date() }

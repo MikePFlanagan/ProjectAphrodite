@@ -21,7 +21,7 @@ const createSchema = z.object({
   shares: z.number().int().nonnegative().optional(),
   saves: z.number().int().nonnegative().optional(),
   followersAtPublish: z.number().int().nonnegative().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string()).optional(),
 });
 
 export async function GET(request: Request) {
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       shares: parsed.data.shares,
       saves: parsed.data.saves,
       followersAtPublish: parsed.data.followersAtPublish,
-      metadata: (parsed.data.metadata ?? {}) as any,
+      metadata: parsed.data.metadata ?? {},
     },
   });
 

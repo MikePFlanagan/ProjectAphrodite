@@ -60,7 +60,7 @@ export function InsightsPanel({ characterId }: { characterId: string }) {
         <div>
           <h2 className="text-lg font-semibold">Character Insights</h2>
           <p className="text-sm text-white/40">
-            Data-driven patterns from this character's content performance.
+            Data-driven patterns from this character&apos;s content performance.
           </p>
         </div>
         <button

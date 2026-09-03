@@ -157,7 +157,7 @@ export function ExperimentsPanel({ characterId }: { characterId: string }) {
               <div className="mt-3">
                 <span className="text-xs font-medium text-white/40">Variable: {exp.variable}</span>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {(exp.variants as any[]).map((v: any, i: number) => (
+                  {(exp.variants as { name: string; description?: string }[]).map((v, i) => (
                     <span
                       key={i}
                       className="rounded-lg bg-violet-300/10 px-2.5 py-1 text-xs text-violet-200/70"

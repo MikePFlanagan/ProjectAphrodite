@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Lightbulb, Loader2, Sparkles, FileText, Eye } from 'lucide-react';
+import { Lightbulb, Loader2, Sparkles, Eye } from 'lucide-react';
 
 type Concept = {
   id: string;
@@ -40,7 +40,12 @@ export function ConceptGenerator({
       fetch(`/api/content-lab/analyses?characterId=${characterId}`).then((r) => r.json()),
     ]).then(([c, a]) => {
       setConcepts(c.concepts ?? []);
-      setAnalyses((a.analyses ?? []).filter((an: any) => an.status === 'COMPLETED'));
+      setAnalyses(
+        (a.analyses ?? []).filter(
+          (an: { id: string; status: string; reference: { title?: string } }) =>
+            an.status === 'COMPLETED',
+        ),
+      );
       setLoading(false);
     });
   }, [characterId]);
