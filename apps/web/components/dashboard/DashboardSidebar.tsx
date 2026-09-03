@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   BadgeDollarSign,
   Compass,
+  FlaskConical,
   Heart,
   LayoutDashboard,
   MessageCirclePlus,
@@ -39,6 +40,11 @@ const navigation = [
     href: '/creator',
     label: 'Creator Studio',
     icon: Stars,
+  },
+  {
+    href: '/content-lab',
+    label: 'Content Lab',
+    icon: FlaskConical,
   },
   {
     href: '/billing',
