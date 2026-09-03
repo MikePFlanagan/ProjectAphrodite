@@ -43,7 +43,10 @@ export async function POST(request: Request) {
 
   const provider = getProvider(parsed.data.provider);
   if (!provider || !provider.isConfigured()) {
-    return NextResponse.json({ error: `Provider "${parsed.data.provider}" is not configured` }, { status: 400 });
+    return NextResponse.json(
+      { error: `Provider "${parsed.data.provider}" is not configured` },
+      { status: 400 },
+    );
   }
 
   const job = await db.contentGenerationJob.create({
@@ -72,10 +75,19 @@ export async function POST(request: Request) {
       where: { id: job.id },
       data: {
         providerJobId: result.providerJobId,
-        status: result.status === 'completed' ? 'COMPLETED' : result.status === 'failed' ? 'FAILED' : 'PROCESSING',
-        result: result.resultUrl ? { url: result.resultUrl, metadata: result.metadata ?? {} } : (result.metadata as any) ?? undefined,
+        status:
+          result.status === 'completed'
+            ? 'COMPLETED'
+            : result.status === 'failed'
+              ? 'FAILED'
+              : 'PROCESSING',
+        result: result.resultUrl
+          ? { url: result.resultUrl, metadata: result.metadata ?? {} }
+          : ((result.metadata as any) ?? undefined),
         startedAt: new Date(),
-        ...(result.status === 'completed' || result.status === 'failed' ? { completedAt: new Date() } : {}),
+        ...(result.status === 'completed' || result.status === 'failed'
+          ? { completedAt: new Date() }
+          : {}),
       },
     });
   } catch (err) {

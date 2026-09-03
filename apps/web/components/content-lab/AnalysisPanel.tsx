@@ -51,12 +51,22 @@ export function AnalysisPanel({ characterId }: { characterId: string }) {
   }
 
   const statusIcon = (s: string) =>
-    s === 'COMPLETED' ? <CheckCircle2 className="size-4 text-emerald-400" /> :
-    s === 'FAILED' ? <XCircle className="size-4 text-red-400" /> :
-    s === 'PROCESSING' ? <Loader2 className="size-4 animate-spin text-amber-400" /> :
-    <Clock className="size-4 text-white/30" />;
+    s === 'COMPLETED' ? (
+      <CheckCircle2 className="size-4 text-emerald-400" />
+    ) : s === 'FAILED' ? (
+      <XCircle className="size-4 text-red-400" />
+    ) : s === 'PROCESSING' ? (
+      <Loader2 className="size-4 animate-spin text-amber-400" />
+    ) : (
+      <Clock className="size-4 text-white/30" />
+    );
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="size-6 animate-spin text-fuchsia-300/50" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 className="size-6 animate-spin text-fuchsia-300/50" />
+      </div>
+    );
 
   return (
     <div className="space-y-6">
@@ -69,13 +79,17 @@ export function AnalysisPanel({ characterId }: { characterId: string }) {
 
       <div className="flex items-end gap-3">
         <div className="flex-1">
-          <label className="mb-1 block text-xs font-medium text-white/50">Reference to analyze</label>
+          <label className="mb-1 block text-xs font-medium text-white/50">
+            Reference to analyze
+          </label>
           <select
             value={selectedRef}
             onChange={(e) => setSelectedRef(e.target.value)}
             className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white focus:border-fuchsia-300/30 focus:outline-none"
           >
-            <option value="" className="bg-[#1a1225]">Select a reference...</option>
+            <option value="" className="bg-[#1a1225]">
+              Select a reference...
+            </option>
             {references.map((r) => (
               <option key={r.id} value={r.id} className="bg-[#1a1225]">
                 {r.title ?? r.id.slice(0, 12)}
@@ -97,7 +111,9 @@ export function AnalysisPanel({ characterId }: { characterId: string }) {
         <div className="flex flex-col items-center rounded-2xl border border-dashed border-white/10 bg-white/[0.015] py-16">
           <Brain className="size-10 text-white/20" />
           <h3 className="mt-4 font-semibold">No analyses yet</h3>
-          <p className="mt-1 text-sm text-white/40">Select a reference and run your first analysis.</p>
+          <p className="mt-1 text-sm text-white/40">
+            Select a reference and run your first analysis.
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -108,7 +124,9 @@ export function AnalysisPanel({ characterId }: { characterId: string }) {
                 <h3 className="text-sm font-medium">
                   {a.reference?.title ?? 'Untitled'} — {a.reference?.platform ?? 'Unknown platform'}
                 </h3>
-                <span className="ml-auto text-xs text-white/30">{new Date(a.createdAt).toLocaleDateString()}</span>
+                <span className="ml-auto text-xs text-white/30">
+                  {new Date(a.createdAt).toLocaleDateString()}
+                </span>
               </div>
 
               {a.status === 'COMPLETED' && (

@@ -62,7 +62,12 @@ export function StoryboardView({
     );
   }
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="size-6 animate-spin text-fuchsia-300/50" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 className="size-6 animate-spin text-fuchsia-300/50" />
+      </div>
+    );
 
   if (!concept) return <p className="text-sm text-white/40">Concept not found.</p>;
 
@@ -105,7 +110,7 @@ export function StoryboardView({
                     {scene.sceneNumber}
                   </div>
                   {i < scenes.length - 1 && (
-                    <div className="mt-2 flex-1 w-px bg-gradient-to-b from-fuchsia-300/20 to-transparent" />
+                    <div className="mt-2 w-px flex-1 bg-gradient-to-b from-fuchsia-300/20 to-transparent" />
                   )}
                 </div>
 
@@ -161,7 +166,9 @@ export function StoryboardView({
 
                   {scene.generationPrompt && (
                     <div className="mt-3 rounded-lg border border-violet-300/10 bg-violet-300/[0.04] px-3 py-2">
-                      <span className="text-xs font-medium text-violet-200/50">Generation prompt</span>
+                      <span className="text-xs font-medium text-violet-200/50">
+                        Generation prompt
+                      </span>
                       <p className="mt-0.5 text-xs text-white/50">{scene.generationPrompt}</p>
                     </div>
                   )}

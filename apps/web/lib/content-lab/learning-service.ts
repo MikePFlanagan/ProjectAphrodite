@@ -65,7 +65,11 @@ export async function generateInsights(
           insights.push({
             dimension: 'platform',
             insight: `Content on ${platform} is associated with ${direction} view performance (${effect.toFixed(1)}x median).`,
-            evidence: vals.map((v, i) => ({ conceptId: performances[i]?.concept?.id ?? '', metric: 'views', value: v })),
+            evidence: vals.map((v, i) => ({
+              conceptId: performances[i]?.concept?.id ?? '',
+              metric: 'views',
+              value: v,
+            })),
             sampleSize: vals.length,
             metric: 'views',
             baseline: medianViews,
@@ -109,7 +113,11 @@ export async function generateInsights(
   return insights;
 }
 
-export async function persistInsights(userId: string, characterId: string, insights: InsightResult[]) {
+export async function persistInsights(
+  userId: string,
+  characterId: string,
+  insights: InsightResult[],
+) {
   for (const insight of insights) {
     await db.contentInsight.create({
       data: {

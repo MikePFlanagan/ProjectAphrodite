@@ -34,12 +34,15 @@ export function transformToOriginalConcept(input: TransformInput): OriginalConte
 
   const borrowed: string[] = [];
   if (contentDna.hook?.hookType) borrowed.push(`Hook style: ${contentDna.hook.hookType}`);
-  if (contentDna.pacing?.duration) borrowed.push(`Target duration: ~${contentDna.pacing.duration}s`);
-  if (contentDna.narrative?.loopBehavior) borrowed.push(`Loop behavior: ${contentDna.narrative.loopBehavior}`);
+  if (contentDna.pacing?.duration)
+    borrowed.push(`Target duration: ~${contentDna.pacing.duration}s`);
+  if (contentDna.narrative?.loopBehavior)
+    borrowed.push(`Loop behavior: ${contentDna.narrative.loopBehavior}`);
   if (contentDna.archetype) borrowed.push(`Content archetype: ${contentDna.archetype}`);
 
   const title = `${character.name}: ${archetype} ${hookType} — ${platform}`;
-  const concept = `A ${duration}-second ${archetype} piece featuring ${character.name} (${character.tagline}). ` +
+  const concept =
+    `A ${duration}-second ${archetype} piece featuring ${character.name} (${character.tagline}). ` +
     `Uses a ${hookType} opening adapted to ${character.name}'s personality and visual style. ` +
     (objective ? `Objective: ${objective}. ` : '') +
     (constraints ? `Constraints: ${constraints}. ` : '');
@@ -77,7 +80,10 @@ export function transformToOriginalConcept(input: TransformInput): OriginalConte
   ];
 
   const script = scenePlan
-    .map((s) => `[Scene ${s.sceneNumber} | ${s.startTime.toFixed(1)}s–${s.endTime.toFixed(1)}s | ${s.purpose}]\n${s.subjectAction}`)
+    .map(
+      (s) =>
+        `[Scene ${s.sceneNumber} | ${s.startTime.toFixed(1)}s–${s.endTime.toFixed(1)}s | ${s.purpose}]\n${s.subjectAction}`,
+    )
     .join('\n\n');
 
   const caption = `${character.name} brings you something special ✨ ${objective ? `#${objective.replace(/\s+/g, '')}` : ''}`;
@@ -95,7 +101,7 @@ export function transformToOriginalConcept(input: TransformInput): OriginalConte
     `${hookType} hook opening. ${platform} optimized.`;
 
   const negativePrompt =
-    'Do not reproduce copyrighted material, watermarks, logos, or another creator\'s identity. ' +
+    "Do not reproduce copyrighted material, watermarks, logos, or another creator's identity. " +
     'Do not copy verbatim dialogue or distinctive protected creative elements.';
 
   const originalityNotes =

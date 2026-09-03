@@ -80,7 +80,12 @@ export function GenerationPanel({ characterId }: { characterId: string }) {
     );
   };
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="size-6 animate-spin text-fuchsia-300/50" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 className="size-6 animate-spin text-fuchsia-300/50" />
+      </div>
+    );
 
   return (
     <div className="space-y-6">
@@ -104,7 +109,9 @@ export function GenerationPanel({ characterId }: { characterId: string }) {
               <span className="text-sm font-medium">{p.name}</span>
               <span
                 className={`rounded-md px-1.5 py-0.5 text-xs ${
-                  p.status === 'configured' ? 'bg-emerald-400/10 text-emerald-300' : 'bg-white/[0.06] text-white/30'
+                  p.status === 'configured'
+                    ? 'bg-emerald-400/10 text-emerald-300'
+                    : 'bg-white/[0.06] text-white/30'
                 }`}
               >
                 {p.status}
@@ -124,9 +131,13 @@ export function GenerationPanel({ characterId }: { characterId: string }) {
             onChange={(e) => setSelectedConcept(e.target.value)}
             className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white focus:border-fuchsia-300/30 focus:outline-none"
           >
-            <option value="" className="bg-[#1a1225]">Select concept...</option>
+            <option value="" className="bg-[#1a1225]">
+              Select concept...
+            </option>
             {concepts.map((c) => (
-              <option key={c.id} value={c.id} className="bg-[#1a1225]">{c.title}</option>
+              <option key={c.id} value={c.id} className="bg-[#1a1225]">
+                {c.title}
+              </option>
             ))}
           </select>
         </div>
@@ -137,9 +148,13 @@ export function GenerationPanel({ characterId }: { characterId: string }) {
             onChange={(e) => setSelectedProvider(e.target.value)}
             className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white focus:border-fuchsia-300/30 focus:outline-none"
           >
-            {providers.filter((p) => p.status === 'configured').map((p) => (
-              <option key={p.id} value={p.id} className="bg-[#1a1225]">{p.name}</option>
-            ))}
+            {providers
+              .filter((p) => p.status === 'configured')
+              .map((p) => (
+                <option key={p.id} value={p.id} className="bg-[#1a1225]">
+                  {p.name}
+                </option>
+              ))}
           </select>
         </div>
         <button
@@ -147,7 +162,11 @@ export function GenerationPanel({ characterId }: { characterId: string }) {
           disabled={!selectedConcept || generating}
           className="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-[#160d1e] transition hover:bg-fuchsia-100 disabled:opacity-50"
         >
-          {generating ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+          {generating ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Sparkles className="size-4" />
+          )}
           Generate
         </button>
       </div>
@@ -162,14 +181,21 @@ export function GenerationPanel({ characterId }: { characterId: string }) {
       ) : (
         <div className="space-y-3">
           {jobs.map((j) => (
-            <div key={j.id} className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+            <div
+              key={j.id}
+              className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.02] p-4"
+            >
               <div>
                 <span className="text-sm font-medium">{j.provider}</span>
-                <span className="ml-2 text-xs text-white/30">{new Date(j.createdAt).toLocaleString()}</span>
+                <span className="ml-2 text-xs text-white/30">
+                  {new Date(j.createdAt).toLocaleString()}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 {statusBadge(j.status)}
-                {j.error && <span className="max-w-[200px] truncate text-xs text-red-300/60">{j.error}</span>}
+                {j.error && (
+                  <span className="max-w-[200px] truncate text-xs text-red-300/60">{j.error}</span>
+                )}
               </div>
             </div>
           ))}

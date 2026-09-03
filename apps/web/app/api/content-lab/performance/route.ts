@@ -39,7 +39,10 @@ export async function POST(request: Request) {
   const parsed = createSchema.safeParse(await request.json());
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
 
-  const owns = await db.character.findFirst({ where: { id: parsed.data.characterId, creatorId: session.user.id }, select: { id: true } });
+  const owns = await db.character.findFirst({
+    where: { id: parsed.data.characterId, creatorId: session.user.id },
+    select: { id: true },
+  });
   if (!owns) return NextResponse.json({ error: 'Character not found' }, { status: 404 });
 
   const perf = await db.contentPerformance.create({

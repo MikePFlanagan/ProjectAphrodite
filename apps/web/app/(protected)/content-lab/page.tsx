@@ -34,7 +34,13 @@ export default async function ContentLabPage() {
 
   const recentPlans = await db.contentPlan.findMany({
     where: { userId: user.id },
-    select: { id: true, title: true, startDate: true, endDate: true, _count: { select: { items: true } } },
+    select: {
+      id: true,
+      title: true,
+      startDate: true,
+      endDate: true,
+      _count: { select: { items: true } },
+    },
     orderBy: { createdAt: 'desc' },
     take: 5,
   });

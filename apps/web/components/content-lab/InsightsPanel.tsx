@@ -38,14 +38,21 @@ export function InsightsPanel({ characterId }: { characterId: string }) {
     if (res.ok) {
       const data = await res.json();
       if (data.insights?.length > 0) {
-        const fresh = await fetch(`/api/content-lab/insights?characterId=${characterId}`).then((r) => r.json());
+        const fresh = await fetch(`/api/content-lab/insights?characterId=${characterId}`).then(
+          (r) => r.json(),
+        );
         setInsights(fresh.insights ?? []);
       }
     }
     setGenerating(false);
   }
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="size-6 animate-spin text-fuchsia-300/50" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 className="size-6 animate-spin text-fuchsia-300/50" />
+      </div>
+    );
 
   return (
     <div className="space-y-6">
@@ -61,7 +68,11 @@ export function InsightsPanel({ characterId }: { characterId: string }) {
           disabled={generating}
           className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.055] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.1] disabled:opacity-50"
         >
-          {generating ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+          {generating ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <RefreshCw className="size-4" />
+          )}
           Refresh Insights
         </button>
       </div>
@@ -71,8 +82,8 @@ export function InsightsPanel({ characterId }: { characterId: string }) {
           <Brain className="size-10 text-white/20" />
           <h3 className="mt-4 font-semibold">No insights yet</h3>
           <p className="mt-2 max-w-sm text-center text-sm text-white/40">
-            Insights are generated from performance data. Log at least 3 performance entries to start
-            discovering patterns.
+            Insights are generated from performance data. Log at least 3 performance entries to
+            start discovering patterns.
           </p>
           <div className="mt-4 flex items-center gap-2 rounded-lg bg-amber-400/10 px-3 py-2 text-xs text-amber-200/70">
             <AlertCircle className="size-3.5" />
@@ -82,7 +93,10 @@ export function InsightsPanel({ characterId }: { characterId: string }) {
       ) : (
         <div className="space-y-4">
           {insights.map((insight) => (
-            <div key={insight.id} className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+            <div
+              key={insight.id}
+              className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5"
+            >
               <div className="flex items-start gap-3">
                 <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20">
                   <TrendingUp className="size-4 text-emerald-300" />

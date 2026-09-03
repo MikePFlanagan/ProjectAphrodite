@@ -67,7 +67,12 @@ export function ConceptGenerator({
     setGenerating(false);
   }
 
-  if (loading) return <div className="flex justify-center py-12"><Loader2 className="size-6 animate-spin text-fuchsia-300/50" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 className="size-6 animate-spin text-fuchsia-300/50" />
+      </div>
+    );
 
   return (
     <div className="space-y-6">
@@ -78,18 +83,27 @@ export function ConceptGenerator({
         </p>
       </div>
 
-      <form onSubmit={generate} className="space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
+      <form
+        onSubmit={generate}
+        className="space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6"
+      >
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-xs font-medium text-white/50">Based on analysis (optional)</label>
+            <label className="mb-1 block text-xs font-medium text-white/50">
+              Based on analysis (optional)
+            </label>
             <select
               value={form.analysisId}
               onChange={(e) => setForm((p) => ({ ...p, analysisId: e.target.value }))}
               className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white focus:border-fuchsia-300/30 focus:outline-none"
             >
-              <option value="" className="bg-[#1a1225]">No specific analysis</option>
+              <option value="" className="bg-[#1a1225]">
+                No specific analysis
+              </option>
               {analyses.map((a) => (
-                <option key={a.id} value={a.id} className="bg-[#1a1225]">{a.reference?.title ?? a.id.slice(0, 12)}</option>
+                <option key={a.id} value={a.id} className="bg-[#1a1225]">
+                  {a.reference?.title ?? a.id.slice(0, 12)}
+                </option>
               ))}
             </select>
           </div>
@@ -100,10 +114,18 @@ export function ConceptGenerator({
               onChange={(e) => setForm((p) => ({ ...p, platform: e.target.value }))}
               className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white focus:border-fuchsia-300/30 focus:outline-none"
             >
-              <option value="tiktok" className="bg-[#1a1225]">TikTok</option>
-              <option value="instagram-reels" className="bg-[#1a1225]">Instagram Reels</option>
-              <option value="youtube-shorts" className="bg-[#1a1225]">YouTube Shorts</option>
-              <option value="youtube" className="bg-[#1a1225]">YouTube</option>
+              <option value="tiktok" className="bg-[#1a1225]">
+                TikTok
+              </option>
+              <option value="instagram-reels" className="bg-[#1a1225]">
+                Instagram Reels
+              </option>
+              <option value="youtube-shorts" className="bg-[#1a1225]">
+                YouTube Shorts
+              </option>
+              <option value="youtube" className="bg-[#1a1225]">
+                YouTube
+              </option>
             </select>
           </div>
         </div>
@@ -119,7 +141,9 @@ export function ConceptGenerator({
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-medium text-white/50">Constraints (optional)</label>
+          <label className="mb-1 block text-xs font-medium text-white/50">
+            Constraints (optional)
+          </label>
           <input
             placeholder="e.g., max 15 seconds, no text overlay..."
             value={form.constraints}
@@ -133,7 +157,11 @@ export function ConceptGenerator({
           disabled={generating || !form.objective}
           className="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-[#160d1e] transition hover:bg-fuchsia-100 disabled:opacity-50"
         >
-          {generating ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+          {generating ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Sparkles className="size-4" />
+          )}
           Generate Concept
         </button>
       </form>
@@ -152,7 +180,9 @@ export function ConceptGenerator({
                 <h3 className="text-sm font-semibold">{c.title}</h3>
                 <div className="flex items-center gap-2">
                   {c.platform && (
-                    <span className="rounded-lg bg-white/[0.06] px-2 py-0.5 text-xs text-white/40">{c.platform}</span>
+                    <span className="rounded-lg bg-white/[0.06] px-2 py-0.5 text-xs text-white/40">
+                      {c.platform}
+                    </span>
                   )}
                   {c.estimatedDuration && (
                     <span className="text-xs text-white/30">{c.estimatedDuration}s</span>
@@ -169,10 +199,17 @@ export function ConceptGenerator({
 
               {c.borrowedElements.length > 0 && (
                 <div className="mt-3">
-                  <span className="text-xs font-medium text-white/40">Structural elements adapted:</span>
+                  <span className="text-xs font-medium text-white/40">
+                    Structural elements adapted:
+                  </span>
                   <div className="mt-1 flex flex-wrap gap-1.5">
                     {c.borrowedElements.map((el, i) => (
-                      <span key={i} className="rounded-md bg-amber-300/10 px-2 py-0.5 text-xs text-amber-200/70">{el}</span>
+                      <span
+                        key={i}
+                        className="rounded-md bg-amber-300/10 px-2 py-0.5 text-xs text-amber-200/70"
+                      >
+                        {el}
+                      </span>
                     ))}
                   </div>
                 </div>

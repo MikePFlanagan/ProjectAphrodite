@@ -33,7 +33,11 @@ export async function POST(request: Request) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const parsed = createSchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: 'Invalid data', details: parsed.error.flatten() }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json(
+      { error: 'Invalid data', details: parsed.error.flatten() },
+      { status: 400 },
+    );
 
   const character = await buildCharacterContext(parsed.data.characterId, session.user.id);
   if (!character) return NextResponse.json({ error: 'Character not found' }, { status: 404 });

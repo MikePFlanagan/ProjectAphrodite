@@ -8,7 +8,10 @@ const createSchema = z.object({
   title: z.string().max(200),
   hypothesis: z.string().max(2000).optional(),
   variable: z.string().max(100),
-  variants: z.array(z.object({ name: z.string().max(100), description: z.string().max(500).optional() })).min(2).max(10),
+  variants: z
+    .array(z.object({ name: z.string().max(100), description: z.string().max(500).optional() }))
+    .min(2)
+    .max(10),
 });
 
 export async function GET(request: Request) {
@@ -32,7 +35,10 @@ export async function POST(request: Request) {
   const parsed = createSchema.safeParse(await request.json());
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
 
-  const owns = await db.character.findFirst({ where: { id: parsed.data.characterId, creatorId: session.user.id }, select: { id: true } });
+  const owns = await db.character.findFirst({
+    where: { id: parsed.data.characterId, creatorId: session.user.id },
+    select: { id: true },
+  });
   if (!owns) return NextResponse.json({ error: 'Character not found' }, { status: 404 });
 
   const experiment = await db.contentExperiment.create({

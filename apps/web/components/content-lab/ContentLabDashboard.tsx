@@ -87,9 +87,7 @@ export function ContentLabDashboard({
             <FlaskConical className="size-4" />
             Content Lab
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight">
-            Content Intelligence
-          </h1>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight">Content Intelligence</h1>
           <p className="mt-1 text-sm text-white/40">
             Analyze, create, and optimize content for your characters.
           </p>
@@ -105,9 +103,7 @@ export function ContentLabDashboard({
             }}
             className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white backdrop-blur-sm transition focus:border-fuchsia-300/30 focus:outline-none"
           >
-            {characters.length === 0 && (
-              <option value="">No characters yet</option>
-            )}
+            {characters.length === 0 && <option value="">No characters yet</option>}
             {characters.map((c) => (
               <option key={c.id} value={c.id} className="bg-[#1a1225]">
                 {c.name}
@@ -177,7 +173,10 @@ export function ContentLabDashboard({
       ) : activeTab === 'generation' ? (
         <GenerationPanel characterId={selectedCharacter.id} />
       ) : activeTab === 'planner' ? (
-        <ContentPlannerPanel characterId={selectedCharacter.id} characterName={selectedCharacter.name} />
+        <ContentPlannerPanel
+          characterId={selectedCharacter.id}
+          characterName={selectedCharacter.name}
+        />
       ) : activeTab === 'performance' ? (
         <PerformancePanel characterId={selectedCharacter.id} />
       ) : activeTab === 'insights' ? (
@@ -328,7 +327,9 @@ function OverviewTab({
               className="group flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 text-left transition hover:border-white/15 hover:bg-white/[0.04]"
             >
               <div className="flex items-center justify-between">
-                <div className={`grid size-10 place-items-center rounded-xl bg-gradient-to-br ${card.color}`}>
+                <div
+                  className={`grid size-10 place-items-center rounded-xl bg-gradient-to-br ${card.color}`}
+                >
                   <Icon className="size-5 text-white/80" />
                 </div>
                 {card.count != null && card.count > 0 && (

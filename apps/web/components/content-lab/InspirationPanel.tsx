@@ -236,13 +236,27 @@ function AddReferenceForm({
           onChange={(e) => update('platform', e.target.value)}
           className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white focus:border-fuchsia-300/30 focus:outline-none"
         >
-          <option value="" className="bg-[#1a1225]">Platform</option>
-          <option value="tiktok" className="bg-[#1a1225]">TikTok</option>
-          <option value="instagram-reels" className="bg-[#1a1225]">Instagram Reels</option>
-          <option value="youtube-shorts" className="bg-[#1a1225]">YouTube Shorts</option>
-          <option value="youtube" className="bg-[#1a1225]">YouTube</option>
-          <option value="twitter" className="bg-[#1a1225]">Twitter/X</option>
-          <option value="other" className="bg-[#1a1225]">Other</option>
+          <option value="" className="bg-[#1a1225]">
+            Platform
+          </option>
+          <option value="tiktok" className="bg-[#1a1225]">
+            TikTok
+          </option>
+          <option value="instagram-reels" className="bg-[#1a1225]">
+            Instagram Reels
+          </option>
+          <option value="youtube-shorts" className="bg-[#1a1225]">
+            YouTube Shorts
+          </option>
+          <option value="youtube" className="bg-[#1a1225]">
+            YouTube
+          </option>
+          <option value="twitter" className="bg-[#1a1225]">
+            Twitter/X
+          </option>
+          <option value="other" className="bg-[#1a1225]">
+            Other
+          </option>
         </select>
       </div>
 
@@ -255,16 +269,57 @@ function AddReferenceForm({
       />
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <input placeholder="Creator name" value={form.creatorName} onChange={(e) => update('creatorName', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
-        <input placeholder="Duration (seconds)" type="number" value={form.duration} onChange={(e) => update('duration', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
-        <input placeholder="Views" type="number" value={form.views} onChange={(e) => update('views', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
+        <input
+          placeholder="Creator name"
+          value={form.creatorName}
+          onChange={(e) => update('creatorName', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
+        <input
+          placeholder="Duration (seconds)"
+          type="number"
+          value={form.duration}
+          onChange={(e) => update('duration', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
+        <input
+          placeholder="Views"
+          type="number"
+          value={form.views}
+          onChange={(e) => update('views', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
       </div>
 
       <div className="grid gap-3 sm:grid-cols-4">
-        <input placeholder="Likes" type="number" value={form.likes} onChange={(e) => update('likes', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
-        <input placeholder="Comments" type="number" value={form.comments} onChange={(e) => update('comments', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
-        <input placeholder="Shares" type="number" value={form.shares} onChange={(e) => update('shares', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
-        <input placeholder="Saves" type="number" value={form.saves} onChange={(e) => update('saves', e.target.value)} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none" />
+        <input
+          placeholder="Likes"
+          type="number"
+          value={form.likes}
+          onChange={(e) => update('likes', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
+        <input
+          placeholder="Comments"
+          type="number"
+          value={form.comments}
+          onChange={(e) => update('comments', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
+        <input
+          placeholder="Shares"
+          type="number"
+          value={form.shares}
+          onChange={(e) => update('shares', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
+        <input
+          placeholder="Saves"
+          type="number"
+          value={form.saves}
+          onChange={(e) => update('saves', e.target.value)}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-fuchsia-300/30 focus:outline-none"
+        />
       </div>
 
       <button

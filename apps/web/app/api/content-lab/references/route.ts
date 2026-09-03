@@ -45,10 +45,17 @@ export async function POST(request: Request) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const parsed = createSchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: 'Invalid data', details: parsed.error.flatten() }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json(
+      { error: 'Invalid data', details: parsed.error.flatten() },
+      { status: 400 },
+    );
 
   if (parsed.data.characterId) {
-    const owns = await db.character.findFirst({ where: { id: parsed.data.characterId, creatorId: session.user.id }, select: { id: true } });
+    const owns = await db.character.findFirst({
+      where: { id: parsed.data.characterId, creatorId: session.user.id },
+      select: { id: true },
+    });
     if (!owns) return NextResponse.json({ error: 'Character not found' }, { status: 404 });
   }
 

@@ -1,4 +1,9 @@
-import type { VideoGenerationProvider, GenerationProviderInfo, GenerationRequest, GenerationJobResult } from './types';
+import type {
+  VideoGenerationProvider,
+  GenerationProviderInfo,
+  GenerationRequest,
+  GenerationJobResult,
+} from './types';
 
 class MockGenerationProvider implements VideoGenerationProvider {
   readonly id = 'mock';
@@ -36,7 +41,12 @@ export function getProvider(id: string): VideoGenerationProvider | undefined {
 
 export function listProviders(): GenerationProviderInfo[] {
   const providers: GenerationProviderInfo[] = [
-    { id: 'mock', name: 'Development Mock', status: 'configured', capabilities: ['video', 'image'] },
+    {
+      id: 'mock',
+      name: 'Development Mock',
+      status: 'configured',
+      capabilities: ['video', 'image'],
+    },
     { id: 'seedance', name: 'Seedance', status: 'unconfigured', capabilities: ['video'] },
     { id: 'kling', name: 'Kling', status: 'unconfigured', capabilities: ['video'] },
     { id: 'veo', name: 'Veo', status: 'unconfigured', capabilities: ['video'] },
