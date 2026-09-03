@@ -43,27 +43,68 @@ enum SubscriptionStatus {
   INCOMPLETE
 }
 
+enum ContentReferenceSource {
+  UPLOAD
+  URL
+  MANUAL
+}
+
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum GenerationJobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+enum ContentPlanItemStatus {
+  IDEA
+  DRAFT
+  READY_FOR_GENERATION
+  GENERATING
+  READY_FOR_REVIEW
+  APPROVED
+  SCHEDULED
+  PUBLISHED
+  FAILED
+}
+
 model User {
-  id                String             @id @default(cuid())
-  name              String?
-  email             String?            @unique
-  emailVerified     DateTime?
-  image             String?
-  passwordHash      String?
-  role              UserRole           @default(USER)
-  accounts          Account[]
-  sessions          Session[]
-  createdCharacters Character[]        @relation("CharacterCreator")
-  conversations     Conversation[]
-  favorites         Favorite[]
-  memories          Memory[]
-  subscription      Subscription?
-  creatorAssets     CreatorAsset[]
-  creatorReferences CreatorReference[]
-  chatUsage         ChatUsage[]
-  relationships     Relationship[]
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String?                @unique
+  emailVerified         DateTime?
+  image                 String?
+  passwordHash          String?
+  role                  UserRole               @default(USER)
+  accounts              Account[]
+  sessions              Session[]
+  createdCharacters     Character[]            @relation("CharacterCreator")
+  conversations         Conversation[]
+  favorites             Favorite[]
+  memories              Memory[]
+  subscription          Subscription?
+  creatorAssets         CreatorAsset[]
+  creatorReferences     CreatorReference[]
+  chatUsage             ChatUsage[]
+  relationships         Relationship[]
+  contentReferences     ContentReference[]
+  contentAnalyses       ContentAnalysis[]
+  contentConcepts       ContentConcept[]
+  contentGenerationJobs ContentGenerationJob[]
+  contentPlans          ContentPlan[]
+  contentPerformances   ContentPerformance[]
+  contentInsights       ContentInsight[]
+  contentExperiments    ContentExperiment[]
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
 }
 
 model CreatorAsset {
@@ -158,15 +199,23 @@ model Character {
   isFeatured        Boolean            @default(false)
   isPublished       Boolean            @default(false)
   creatorId         String?
-  creator           User?              @relation("CharacterCreator", fields: [creatorId], references: [id], onDelete: SetNull)
-  conversations     Conversation[]
-  favorites         Favorite[]
-  memories          Memory[]
-  creatorAssets     CreatorAsset[]
-  creatorReferences CreatorReference[]
-  relationships     Relationship[]
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  creator               User?                  @relation("CharacterCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  conversations         Conversation[]
+  favorites             Favorite[]
+  memories              Memory[]
+  creatorAssets         CreatorAsset[]
+  creatorReferences     CreatorReference[]
+  relationships         Relationship[]
+  contentReferences     ContentReference[]
+  contentAnalyses       ContentAnalysis[]
+  contentConcepts       ContentConcept[]
+  contentGenerationJobs ContentGenerationJob[]
+  contentPlans          ContentPlan[]
+  contentPerformances   ContentPerformance[]
+  contentInsights       ContentInsight[]
+  contentExperiments    ContentExperiment[]
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
 
   @@index([isPublished, isFeatured])
   @@index([category])
@@ -280,4 +329,234 @@ model Subscription {
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
   user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Content Lab Models ─────────────────────────────────────────────────────
+
+model ContentReference {
+  id                 String               @id @default(cuid())
+  userId             String
+  characterId        String?
+  sourceType         ContentReferenceSource
+  sourceUrl          String?              @db.Text
+  platform           String?
+  title              String?
+  description        String?              @db.Text
+  mediaUrl           String?              @db.Text
+  mediaMimeType      String?
+  duration           Float?
+  creatorName        String?
+  publishedAt        DateTime?
+  views              Int?
+  likes              Int?
+  comments           Int?
+  shares             Int?
+  saves              Int?
+  followersAtPublish Int?
+  metadata           Json                 @default("{}")
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character          Character?           @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  analyses           ContentAnalysis[]
+
+  @@index([userId, createdAt])
+  @@index([userId, characterId])
+}
+
+model ContentAnalysis {
+  id           String         @id @default(cuid())
+  userId       String
+  characterId  String?
+  referenceId  String
+  status       AnalysisStatus @default(PENDING)
+  hook         Json           @default("{}")
+  pacing       Json           @default("{}")
+  visualStructure Json        @default("{}")
+  narrative    Json           @default("{}")
+  textStrategy Json           @default("{}")
+  audioStrategy Json          @default("{}")
+  engagement   Json           @default("{}")
+  archetype    String?
+  contentDna   Json           @default("{}")
+  confidence   Json           @default("{}")
+  error        String?        @db.Text
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character    Character?     @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  reference    ContentReference @relation(fields: [referenceId], references: [id], onDelete: Cascade)
+  concepts     ContentConcept[]
+
+  @@index([userId, createdAt])
+  @@index([referenceId])
+}
+
+model ContentConcept {
+  id               String               @id @default(cuid())
+  userId           String
+  characterId      String
+  analysisId       String?
+  experimentId     String?
+  title            String
+  concept          String               @db.Text
+  hook             String               @db.Text
+  script           String?              @db.Text
+  scenePlan        Json                 @default("[]")
+  shotList         Json                 @default("[]")
+  caption          String?              @db.Text
+  hashtags         String[]             @default([])
+  estimatedDuration Float?
+  generationPrompt String?              @db.Text
+  negativePrompt   String?              @db.Text
+  platform         String?
+  objective        String?
+  originalityNotes String?              @db.Text
+  borrowedElements Json                 @default("[]")
+  metadata         Json                 @default("{}")
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character        Character            @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  analysis         ContentAnalysis?     @relation(fields: [analysisId], references: [id], onDelete: SetNull)
+  experiment       ContentExperiment?   @relation(fields: [experimentId], references: [id], onDelete: SetNull)
+  generationJobs   ContentGenerationJob[]
+  planItems        ContentPlanItem[]
+  performances     ContentPerformance[]
+
+  @@index([userId, createdAt])
+  @@index([characterId])
+  @@index([experimentId])
+}
+
+model ContentGenerationJob {
+  id             String             @id @default(cuid())
+  userId         String
+  characterId    String
+  conceptId      String
+  provider       String
+  providerJobId  String?
+  status         GenerationJobStatus @default(QUEUED)
+  request        Json               @default("{}")
+  result         Json?
+  error          String?            @db.Text
+  createdAt      DateTime           @default(now())
+  startedAt      DateTime?
+  completedAt    DateTime?
+  updatedAt      DateTime           @updatedAt
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character      Character          @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  concept        ContentConcept     @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([status])
+  @@index([conceptId])
+}
+
+model ContentPlan {
+  id          String            @id @default(cuid())
+  userId      String
+  characterId String
+  title       String
+  platforms   String[]          @default([])
+  startDate   DateTime
+  endDate     DateTime
+  objectives  String?           @db.Text
+  constraints String?           @db.Text
+  metadata    Json              @default("{}")
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character   Character         @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  items       ContentPlanItem[]
+
+  @@index([userId, createdAt])
+  @@index([characterId])
+}
+
+model ContentPlanItem {
+  id          String                @id @default(cuid())
+  planId      String
+  conceptId   String?
+  scheduledAt DateTime?
+  platform    String?
+  archetype   String?
+  hookSummary String?
+  status      ContentPlanItemStatus @default(IDEA)
+  sortOrder   Int                   @default(0)
+  metadata    Json                  @default("{}")
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  plan        ContentPlan           @relation(fields: [planId], references: [id], onDelete: Cascade)
+  concept     ContentConcept?       @relation(fields: [conceptId], references: [id], onDelete: SetNull)
+
+  @@index([planId, scheduledAt])
+}
+
+model ContentPerformance {
+  id              String         @id @default(cuid())
+  userId          String
+  characterId     String
+  conceptId       String?
+  platform        String
+  views           Int?
+  likes           Int?
+  comments        Int?
+  shares          Int?
+  saves           Int?
+  clicks          Int?
+  followersGained Int?
+  revenue         Float?
+  measuredAt      DateTime       @default(now())
+  metadata        Json           @default("{}")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character       Character      @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  concept         ContentConcept? @relation(fields: [conceptId], references: [id], onDelete: SetNull)
+
+  @@index([userId, characterId, measuredAt])
+  @@index([conceptId])
+}
+
+model ContentInsight {
+  id          String    @id @default(cuid())
+  userId      String
+  characterId String
+  dimension   String
+  insight     String    @db.Text
+  evidence    Json      @default("[]")
+  sampleSize  Int
+  metric      String
+  baseline    Float?
+  observed    Float?
+  effect      Float?
+  confidence  Float?
+  dateStart   DateTime?
+  dateEnd     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([userId, characterId, createdAt])
+}
+
+model ContentExperiment {
+  id          String           @id @default(cuid())
+  userId      String
+  characterId String
+  title       String
+  hypothesis  String?          @db.Text
+  variable    String
+  variants    Json             @default("[]")
+  status      String           @default("active")
+  metadata    Json             @default("{}")
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  character   Character        @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  concepts    ContentConcept[]
+
+  @@index([userId, characterId, createdAt])
 }
